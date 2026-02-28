@@ -12,6 +12,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
+import ConfidenceScoreCard from '../components/ConfidenceScoreCard';
+import SafeToSpendWidget from '../components/SafeToSpendWidget';
+import ActionPlanCard from '../components/ActionPlanCard';
 
 const PNC_ORANGE = '#EF7622';
 const PNC_NAVY = '#003087';
@@ -66,12 +69,19 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-        {/* Alert Banner */}
-        <View style={styles.alertBanner}>
-          <Text style={styles.alertText}>
-            Spend Tracker: You've used 68% of your monthly budget
-          </Text>
+        {/* Smart Insights Section */}
+        <View style={styles.insightsBanner}>
+          <View>
+            <Text style={styles.insightsTitle}>✦ Financial Pulse</Text>
+            <Text style={styles.insightsSubtitle}>AI-powered insights just for you</Text>
+          </View>
+          <View style={styles.insightsBadge}>
+            <Text style={styles.insightsBadgeText}>SMART</Text>
+          </View>
         </View>
+        <ConfidenceScoreCard />
+        <SafeToSpendWidget />
+        <ActionPlanCard />
 
         {/* Accounts Section */}
         <View style={styles.sectionHeader}>
@@ -160,6 +170,39 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  insightsBanner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: PNC_NAVY,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 12,
+  },
+  insightsTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  insightsSubtitle: {
+    color: '#A8C8E8',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  insightsBadge: {
+    backgroundColor: PNC_ORANGE,
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  insightsBadgeText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
   logoImage: {
     width: 120,
     height: 50,
