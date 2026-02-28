@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -52,9 +53,12 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Top Nav */}
       <View style={styles.navbar}>
-        <View style={styles.logoSmall}>
-          <Text style={styles.logoSmallText}>PNC</Text>
-        </View>
+        <Image
+          source={require('../data/logo_pnc.png')}
+          style={styles.logoImage}
+          resizeMode="contain"
+        />
+
         <Text style={styles.greeting}>Good morning, {MOCK_USER.name.split(' ')[0]}</Text>
         <TouchableOpacity onPress={handleLogout} style={styles.signOutBtn}>
           <Text style={styles.signOutText}>Sign Out</Text>
@@ -156,6 +160,11 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoImage: {
+    width: 120,
+    height: 50,
+    marginRight: 10,
+  },
   container: { flex: 1, backgroundColor: '#F4F6F9' },
   navbar: {
     backgroundColor: PNC_NAVY,

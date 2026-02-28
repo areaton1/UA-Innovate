@@ -52,9 +52,12 @@ export default function LoginScreen() {
       >
         {/* Header / Logo */}
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Text style={styles.logoText}>PNC</Text>
-          </View>
+          <Image
+            source={require('../data/logo_pnc.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+
           <Text style={styles.tagline}>The Certain Way to Financial Success</Text>
         </View>
 
@@ -131,6 +134,11 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoImage: {
+    width: 120,
+    height: 50,
+    marginBottom: 10,
+  },
   container: {
     flex: 1,
     backgroundColor: PNC_NAVY,
