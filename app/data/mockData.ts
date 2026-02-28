@@ -56,4 +56,13 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { id: 't11', accountId: '2', date: '2026-02-15', description: 'Interest Payment', amount: 3.12, category: 'Interest', pending: false },
   { id: 't12', accountId: '3', date: '2026-02-28', description: 'Uber Eats', amount: -28.40, category: 'Food & Dining', pending: true },
   { id: 't13', accountId: '3', date: '2026-02-26', description: 'Apple Store', amount: -199.00, category: 'Shopping', pending: false },
+  { id: 't14', accountId: '1', date: '2026-02-19', description: 'Direct Deposit - Employer', amount: 2_450.00, category: 'Income', pending: false },
+  { id: 't15', accountId: '1', date: '2026-02-18', description: 'Electric Bill', amount: -125.00, category: 'Utilities', pending: false },
+  { id: 't16', accountId: '1', date: '2026-02-17', description: 'Walmart', amount: -88.42, category: 'Groceries', pending: false },
+  { id: 't17', accountId: '1', date: '2026-02-16', description: 'Starbucks', amount: -6.50, category: 'Food & Dining', pending: false },
+  { id: 't18', accountId: '1', date: '2026-02-14', description: 'DoorDash', amount: -32.18, category: 'Food & Dining', pending: false },
+  { id: 't19', accountId: '1', date: '2026-02-12', description: 'Chevron', amount: -48.00, category: 'Gas', pending: false },
+  { id: 't20', accountId: '1', date: '2026-02-10', description: 'Hulu', amount: -12.99, category: 'Subscriptions', pending: false },
+  { id: 't21', accountId: '1', date: '2026-02-08', description: 'Costco', amount: -156.00, category: 'Shopping', pending: false },
+  { id: 't22', accountId: '1', date: '2026-02-05', description: 'Direct Deposit - Employer', amount: 2_450.00, category: 'Income', pending: false },
 ];
