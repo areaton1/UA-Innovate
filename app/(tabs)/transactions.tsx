@@ -246,7 +246,7 @@ export default function TransactionsScreen() {
             onPress={() => setMode('radar')}
           >
             <Text style={[styles.segmentText, mode === 'radar' && styles.segmentTextActive]}>
-              ◉  Radar
+              ◉  Subscription Radar
             </Text>
           </TouchableOpacity>
         </View>
