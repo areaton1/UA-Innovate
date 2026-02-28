@@ -12,6 +12,9 @@ import { useRouter } from 'expo-router';
 import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
 import { colors, spacing, typography } from '@/constants/theme';
+import ConfidenceScoreCard from '@/components/ConfidenceScoreCard';
+import SafeToSpendWidget from '@/components/SafeToSpendWidget';
+import ActionPlanCard from '@/components/ActionPlanCard';
 
 const PncLogo = require('@/assets/pnc-logo-rev.svg').default;
 
@@ -58,11 +61,19 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-        <View style={styles.alertBanner}>
-          <Text style={styles.alertText}>
-            Spend Tracker: You've used 68% of your monthly budget
-          </Text>
+        {/* Financial Pulse Section */}
+        <View style={styles.pulseBanner}>
+          <View>
+            <Text style={styles.pulseTitle}>✦ Financial Pulse</Text>
+            <Text style={styles.pulseSubtitle}>AI-powered insights just for you</Text>
+          </View>
+          <View style={styles.pulseBadge}>
+            <Text style={styles.pulseBadgeText}>SMART</Text>
+          </View>
         </View>
+        <ConfidenceScoreCard />
+        <SafeToSpendWidget />
+        <ActionPlanCard />
 
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>My Accounts</Text>
@@ -152,6 +163,39 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  pulseBanner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#003087',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 12,
+  },
+  pulseTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  pulseSubtitle: {
+    color: '#A8C8E8',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  pulseBadge: {
+    backgroundColor: colors.primary,
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  pulseBadgeText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
   container: { flex: 1, backgroundColor: colors.gray },
   navbar: {
     backgroundColor: colors.navBg,

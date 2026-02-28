@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // auto-login for dev
 
   function login(email: string, password: string): boolean {
     if (email === MOCK_USER.email && password === MOCK_USER.password) {
