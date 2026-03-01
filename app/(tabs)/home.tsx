@@ -12,6 +12,10 @@ import { useRouter } from 'expo-router';
 import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS, MOCK_SUBSCRIPTIONS } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
 import { colors, spacing, typography } from '@/constants/theme';
+import TransferModal from '@/components/TransferModal';
+import PayBillsModal from '@/components/PayBillsModal';
+import DepositModal from '@/components/DepositModal';
+import ZelleModal from '@/components/ZelleModal';
 
 const PncLogo = require('@/assets/pnc-logo-rev.svg').default;
 
@@ -19,6 +23,11 @@ function formatCurrency(amount: number) {
   const abs = Math.abs(amount);
   const formatted = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return amount < 0 ? `-$${formatted}` : `$${formatted}`;
+}
+
+function formatCurrencyAbs(amount: number) {
+  const abs = Math.abs(amount);
+  return '$' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function formatDate(dateStr: string) {
@@ -30,6 +39,10 @@ export default function HomeScreen() {
   const router = useRouter();
   const { logout } = useAuth();
   const [balancesHidden, setBalancesHidden] = useState(false);
+  const [showTransfer, setShowTransfer] = useState(false);
+  const [showPayBills, setShowPayBills] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(false);
+  const [showZelle, setShowZelle] = useState(false);
 
   const recentTransactions = MOCK_TRANSACTIONS.filter((t) => t.accountId === '1').slice(0, 4);
 
@@ -80,7 +93,12 @@ export default function HomeScreen() {
         </View>
 
         {MOCK_ACCOUNTS.map((account) => (
-          <TouchableOpacity key={account.id} style={styles.accountCard} activeOpacity={0.8}>
+          <TouchableOpacity
+            key={account.id}
+            style={styles.accountCard}
+            activeOpacity={0.8}
+            onPress={() => router.push(`/account/${account.id}` as never)}
+          >
             <View style={styles.accountCardLeft}>
               <View style={[styles.accountTypeBadge, account.type === 'Credit' && styles.creditBadge]}>
                 <Text style={styles.accountTypeBadgeText}>{account.type.charAt(0)}</Text>
@@ -94,15 +112,12 @@ export default function HomeScreen() {
               <Text style={styles.balanceLabel}>
                 {account.type === 'Credit' ? 'Balance Due' : 'Available'}
               </Text>
-              <Text
-                style={[
-                  styles.balanceAmount,
-                  account.balance < 0 && styles.negativeBalance,
-                ]}
-              >
+              <Text style={styles.balanceAmount}>
                 {balancesHidden
                   ? '••••••'
-                  : formatCurrency(account.type === 'Credit' ? account.balance : account.available)}
+                  : account.type === 'Credit'
+                  ? formatCurrencyAbs(account.balance)
+                  : formatCurrency(account.available)}
               </Text>
             </View>
           </TouchableOpacity>
@@ -112,21 +127,22 @@ export default function HomeScreen() {
           Quick Actions
         </Text>
         <View style={styles.quickActions}>
-          {[
-            { label: 'Transfer', icon: '↔' },
-            { label: 'Pay Bills', icon: '📄' },
-            { label: 'Deposit', icon: '📱' },
-            { label: 'Zelle®', icon: '⚡' },
-          ].map((action) => (
-            <TouchableOpacity
-              key={action.label}
-              style={styles.actionBtn}
-              onPress={() => Alert.alert(action.label, 'This feature is coming soon!')}
-            >
-              <Text style={styles.actionIcon}>{action.icon}</Text>
-              <Text style={styles.actionLabel}>{action.label}</Text>
-            </TouchableOpacity>
-          ))}
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setShowTransfer(true)}>
+            <Text style={styles.actionIcon}>↔</Text>
+            <Text style={styles.actionLabel}>Transfer</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setShowPayBills(true)}>
+            <Text style={styles.actionIcon}>📄</Text>
+            <Text style={styles.actionLabel}>Pay Bills</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setShowDeposit(true)}>
+            <Text style={styles.actionIcon}>📱</Text>
+            <Text style={styles.actionLabel}>Deposit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setShowZelle(true)}>
+            <Text style={styles.actionIcon}>⚡</Text>
+            <Text style={styles.actionLabel}>Zelle®</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.sectionHeader}>
@@ -187,6 +203,11 @@ export default function HomeScreen() {
 
         <View style={{ height: spacing.lg }} />
       </ScrollView>
+
+      <TransferModal visible={showTransfer} onClose={() => setShowTransfer(false)} />
+      <PayBillsModal visible={showPayBills} onClose={() => setShowPayBills(false)} />
+      <DepositModal visible={showDeposit} onClose={() => setShowDeposit(false)} />
+      <ZelleModal visible={showZelle} onClose={() => setShowZelle(false)} />
     </SafeAreaView>
   );
 }

@@ -28,7 +28,7 @@ type ScreenMode = 'transactions' | 'radar';
 function formatCurrency(amount: number) {
   const abs = Math.abs(amount);
   const formatted = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return amount < 0 ? `-$${formatted}` : `+$${formatted}`;
+  return amount < 0 ? `-$${formatted}` : `$${formatted}`;
 }
 
 function formatDate(dateStr: string) {
@@ -38,7 +38,7 @@ function formatDate(dateStr: string) {
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
-const CATEGORIES = ['All', 'Groceries', 'Food & Dining', 'Shopping', 'Subscriptions', 'Gas', 'Income', 'Transfer'];
+const CATEGORIES = ['All', 'Groceries', 'Food & Dining', 'Shopping', 'Subscriptions', 'Gas', 'Income', 'Transfer', 'Interest'];
 
 const CATEGORY_COLORS: Record<SubscriptionCategory, string> = {
   Streaming: '#0069aa',
