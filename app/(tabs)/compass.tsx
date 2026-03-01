@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { useState, useCallback } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import ConfidenceScoreCard from '../../components/ConfidenceScoreCard';
 import SafeToSpendWidget from '../../components/SafeToSpendWidget';
@@ -24,6 +25,16 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
 
 export default function CompassScreen() {
   const [section, setSection] = useState<Section>('insights');
+
+  useFocusEffect(
+    useCallback(() => {
+      Alert.alert(
+        '⚠️ Spending Alert',
+        "Based on your current habits, this month is looking tight. At this rate, you may not have enough left to cover rent on the 14th.\n\nCheck your insights below for ways to course-correct.",
+        [{ text: 'Show me', style: 'default' }]
+      );
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
