@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS, MOCK_SUBSCRIPTIONS } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
 import { colors, spacing, typography } from '@/constants/theme';
@@ -80,7 +81,10 @@ export default function HomeScreen() {
         {/* Financial Pulse Section */}
         <View style={styles.pulseBanner}>
           <View>
-            <Text style={styles.pulseTitle}>✦ Financial Pulse</Text>
+            <View style={styles.pulseTitleRow}>
+              <Ionicons name="pulse-outline" size={16} color="#fff" />
+              <Text style={styles.pulseTitle}>Financial Pulse</Text>
+            </View>
             <Text style={styles.pulseSubtitle}>AI-powered insights just for you</Text>
           </View>
           <View style={styles.pulseBadge}>
@@ -96,7 +100,7 @@ export default function HomeScreen() {
           onPress={() => router.push('/(tabs)/transactions')}
         >
           <Text style={styles.alertText}>
-            ◉  Subscription Radar: {MOCK_SUBSCRIPTIONS.length} active subscriptions — ${monthlySubTotal.toFixed(2)}/mo
+            Subscription Radar: {MOCK_SUBSCRIPTIONS.length} active subscriptions — ${monthlySubTotal.toFixed(2)}/mo
           </Text>
           <Text style={styles.alertLink}>View →</Text>
         </TouchableOpacity>
@@ -144,19 +148,19 @@ export default function HomeScreen() {
         </Text>
         <View style={styles.quickActions}>
           <TouchableOpacity style={styles.actionBtn} onPress={() => setShowTransfer(true)}>
-            <Text style={styles.actionIcon}>↔</Text>
+            <Ionicons name="swap-horizontal-outline" size={24} color={colors.navBg} style={styles.actionIcon} />
             <Text style={styles.actionLabel}>Transfer</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={() => setShowPayBills(true)}>
-            <Text style={styles.actionIcon}>📄</Text>
+            <Ionicons name="document-text-outline" size={24} color={colors.navBg} style={styles.actionIcon} />
             <Text style={styles.actionLabel}>Pay Bills</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={() => setShowDeposit(true)}>
-            <Text style={styles.actionIcon}>📱</Text>
+            <Ionicons name="phone-portrait-outline" size={24} color={colors.navBg} style={styles.actionIcon} />
             <Text style={styles.actionLabel}>Deposit</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={() => setShowZelle(true)}>
-            <Text style={styles.actionIcon}>⚡</Text>
+            <Ionicons name="flash-outline" size={24} color={colors.navBg} style={styles.actionIcon} />
             <Text style={styles.actionLabel}>Zelle®</Text>
           </TouchableOpacity>
         </View>
@@ -204,7 +208,7 @@ export default function HomeScreen() {
           </View>
           {topSubs.map((sub) => (
             <View key={sub.id} style={styles.radarSubRow}>
-              <Text style={styles.radarSubIcon}>{sub.icon}</Text>
+              <Ionicons name={sub.icon as any} size={16} color={colors.navBg} />
               <Text style={styles.radarSubName}>{sub.name}</Text>
               <Text style={styles.radarSubAmt}>-${sub.amount.toFixed(2)}/mo</Text>
             </View>
@@ -238,6 +242,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     marginBottom: 12,
+  },
+  pulseTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   pulseTitle: {
     color: '#fff',
@@ -344,7 +353,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  actionIcon: { fontSize: 22, marginBottom: 4 },
+  actionIcon: { marginBottom: 4 },
   actionLabel: { fontSize: 11, fontWeight: '600', color: colors.navBg },
   txRow: {
     backgroundColor: colors.white,
@@ -410,7 +419,6 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
     gap: 10,
   },
-  radarSubIcon: { fontSize: 16 },
   radarSubName: { flex: 1, fontWeight: '500', color: colors.text, fontSize: 13 },
   radarSubAmt: { fontWeight: '700', color: '#c62828', fontSize: 13 },
   radarViewAllBtn: {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { generateActionPlan, type Action, type ActionPriority } from '@/app/data/financialEngine';
 
 const PNC_NAVY = '#003087';
@@ -28,7 +29,7 @@ function ActionItem({ action, isLast }: { action: Action; isLast: boolean }) {
     >
       <View style={styles.actionRow}>
         <View style={[styles.priorityBar, { backgroundColor: cfg.color }]} />
-        <Text style={styles.actionIcon}>{action.icon}</Text>
+        <Ionicons name={action.icon as any} size={20} color="#555" style={styles.actionIcon} />
         <View style={styles.actionContent}>
           <View style={styles.actionHeader}>
             <Text style={styles.actionTitle}>{action.title}</Text>
@@ -47,7 +48,7 @@ function ActionItem({ action, isLast }: { action: Action; isLast: boolean }) {
             </View>
           )}
         </View>
-        <Text style={styles.chevron}>{expanded ? '▲' : '▼'}</Text>
+        <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color="#CCC" style={styles.chevron} />
       </View>
     </TouchableOpacity>
   );
@@ -165,7 +166,6 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   actionIcon: {
-    fontSize: 20,
     marginRight: 10,
     marginTop: 1,
   },
@@ -224,8 +224,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   chevron: {
-    fontSize: 10,
-    color: '#CCC',
     marginLeft: 6,
     marginTop: 4,
   },

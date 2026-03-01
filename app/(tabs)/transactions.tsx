@@ -17,6 +17,7 @@ import {
   type SubscriptionCategory,
 } from '../data/mockData';
 import { colors, spacing, typography } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
 import SubscriptionRow from '@/components/SubscriptionRow';
 import SpendingBar from '@/components/SpendingBar';
 import MiniBarChart from '@/components/MiniBarChart';
@@ -246,7 +247,7 @@ export default function TransactionsScreen() {
             onPress={() => setMode('radar')}
           >
             <Text style={[styles.segmentText, mode === 'radar' && styles.segmentTextActive]}>
-              ◉  Subscription Radar
+              Subscription Radar
             </Text>
           </TouchableOpacity>
         </View>

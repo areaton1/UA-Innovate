@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { MOCK_ACCOUNTS } from '@/app/data/mockData';
 import { colors, spacing, typography } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
 
 type Props = {
   visible: boolean;
@@ -54,7 +55,9 @@ export default function TransferModal({ visible, onClose }: Props) {
 
           {success ? (
             <View style={styles.successContainer}>
-              <Text style={styles.successIcon}>✓</Text>
+              <View style={styles.successIcon}>
+                <Ionicons name="checkmark" size={40} color="#2e7d32" />
+              </View>
               <Text style={styles.successTitle}>Transfer Submitted</Text>
               <Text style={styles.successSub}>
                 ${Number(amount).toFixed(2)} from {fromAccount.name} to {toAccount.name}
@@ -243,14 +246,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
   },
   successIcon: {
-    fontSize: 52,
-    color: '#2e7d32',
     backgroundColor: '#e8f5e9',
     width: 80,
     height: 80,
-    textAlign: 'center',
-    lineHeight: 80,
     borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden',
     marginBottom: 16,
   },

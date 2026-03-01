@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { calculateConfidenceScore, type ScoreBreakdown } from '@/app/data/financialEngine';
 
 const PNC_NAVY = '#003087';
@@ -48,7 +49,7 @@ export default function ConfidenceScoreCard() {
           </View>
         </View>
 
-        <Text style={styles.chevron}>{expanded ? '▲' : '▼'}</Text>
+        <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color="#CCC" />
       </TouchableOpacity>
 
       {expanded && (
@@ -121,10 +122,7 @@ const styles = StyleSheet.create({
     height: 5,
     borderRadius: 3,
   },
-  chevron: {
-    fontSize: 10,
-    color: '#CCC',
-  },
+  chevron: {},
   breakdown: {
     paddingHorizontal: 18,
     paddingBottom: 16,

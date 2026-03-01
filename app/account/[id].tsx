@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MOCK_ACCOUNTS, MOCK_TRANSACTIONS, MOCK_SUBSCRIPTIONS } from '@/app/data/mockData';
 import { colors, spacing, typography } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
 
 function formatCurrency(amount: number) {
   const abs = Math.abs(amount);
@@ -61,7 +62,7 @@ export default function AccountDetailScreen() {
       {/* Navbar */}
       <View style={[styles.navbar, { backgroundColor: heroBg }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backText}>← Back</Text>
+          <Ionicons name="arrow-back" size={22} color="#fff" />
         </TouchableOpacity>
         <View style={styles.navCenter}>
           <Text style={styles.navTitle}>{account.name}</Text>
@@ -292,7 +293,7 @@ export default function AccountDetailScreen() {
             </View>
             {subscriptions.map((sub) => (
               <View key={sub.id} style={styles.subRow}>
-                <Text style={styles.subIcon}>{sub.icon}</Text>
+                <Ionicons name={sub.icon as any} size={18} color={colors.navBg} style={styles.subIcon} />
                 <View style={styles.subInfo}>
                   <Text style={styles.subName}>{sub.name}</Text>
                   <Text style={styles.subNext}>Next billing: {formatDate(sub.nextBillingDate)}</Text>
@@ -325,7 +326,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   backBtn: { width: 60 },
-  backText: { color: colors.white, fontSize: 14, fontWeight: '600' },
   navCenter: { flex: 1, alignItems: 'center' },
   navTitle: { color: colors.white, fontWeight: '700', fontSize: 16 },
   navSubtitle: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 2 },
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     gap: 12,
   },
-  subIcon: { fontSize: 22 },
+  subIcon: {},
   subInfo: { flex: 1 },
   subName: { fontWeight: '600', color: colors.text, fontSize: 14 },
   subNext: { color: colors.textMuted, fontSize: 12, marginTop: 2 },

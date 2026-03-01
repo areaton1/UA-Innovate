@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { generateActionPlan, type ActionPriority } from '@/app/data/financialEngine';
 
 const PNC_NAVY = '#003087';
@@ -68,7 +69,7 @@ export default function ActionDetailScreen() {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Text style={styles.backText}>← Back</Text>
+          <Ionicons name="arrow-back" size={22} color="#A8C8E8" />
         </TouchableOpacity>
         <Text style={{ padding: 20 }}>Action not found.</Text>
       </SafeAreaView>
@@ -82,7 +83,7 @@ export default function ActionDetailScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backText}>← Back</Text>
+          <Ionicons name="arrow-back" size={22} color="#A8C8E8" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Action Plan</Text>
         <View style={{ width: 60 }} />
@@ -92,7 +93,7 @@ export default function ActionDetailScreen() {
         {/* Action Hero */}
         <View style={styles.heroCard}>
           <View style={styles.heroTop}>
-            <Text style={styles.heroIcon}>{action.icon}</Text>
+            <Ionicons name={action.icon as any} size={32} color={PNC_NAVY} />
             <View style={[styles.priorityBadge, { backgroundColor: cfg.color + '20' }]}>
               <View style={[styles.priorityDot, { backgroundColor: cfg.color }]} />
               <Text style={[styles.priorityLabel, { color: cfg.color }]}>{cfg.label}</Text>
@@ -101,7 +102,7 @@ export default function ActionDetailScreen() {
           <Text style={styles.heroTitle}>{action.title}</Text>
           <Text style={styles.heroDescription}>{action.description}</Text>
           <View style={styles.impactRow}>
-            <Text style={styles.impactIcon}>💰</Text>
+            <Ionicons name="cash-outline" size={16} color="#2E7D32" />
             <Text style={styles.impactText}>{action.impact}</Text>
           </View>
         </View>
@@ -156,11 +157,6 @@ const styles = StyleSheet.create({
   backBtn: {
     width: 60,
   },
-  backText: {
-    color: '#A8C8E8',
-    fontSize: 15,
-    fontWeight: '600',
-  },
   headerTitle: {
     color: '#fff',
     fontSize: 16,
@@ -185,9 +181,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
-  },
-  heroIcon: {
-    fontSize: 32,
   },
   priorityBadge: {
     flexDirection: 'row',
@@ -226,9 +219,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-  },
-  impactIcon: {
-    fontSize: 16,
   },
   impactText: {
     fontSize: 13,

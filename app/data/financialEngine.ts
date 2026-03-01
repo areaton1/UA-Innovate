@@ -224,7 +224,7 @@ export function generateActionPlan(): Action[] {
     actions.push({
       id: 'spending-high',
       priority: 'high',
-      icon: '⚠️',
+      icon: 'warning-outline',
       title: 'Reduce monthly spending',
       description: `You've spent $${spending.toFixed(0)} of your $${income.toFixed(0)} income this month — that's ${Math.round(spendRatio * 100)}%. Try to stay under 80%.`,
       impact: `Free up ~$${Math.round((spendRatio - 0.8) * income)}/mo`,
@@ -237,7 +237,7 @@ export function generateActionPlan(): Action[] {
     actions.push({
       id: 'credit-high',
       priority: 'high',
-      icon: '💳',
+      icon: 'card-outline',
       title: 'Pay down your credit card',
       description: `Your credit utilization is ${Math.round(creditUtil * 100)}%. Keeping it below 30% improves your credit score and reduces interest charges.`,
       impact: `Pay $${Math.max(0, Math.round(creditBalance - 300))} to reach 30%`,
@@ -252,7 +252,7 @@ export function generateActionPlan(): Action[] {
     actions.push({
       id: 'savings-low',
       priority: monthsOfCushion < 1 ? 'high' : 'medium',
-      icon: '🏦',
+      icon: 'business-outline',
       title: 'Build your emergency fund',
       description: `You have ${monthsOfCushion.toFixed(1)} months of expenses saved. A 3-month cushion protects you from unexpected costs like car repairs or medical bills.`,
       impact: `Save $${Math.round(needed / 6)}/mo for 6 months to reach goal`,
@@ -265,7 +265,7 @@ export function generateActionPlan(): Action[] {
     actions.push({
       id: 'subscriptions',
       priority: 'medium',
-      icon: '📡',
+      icon: 'cellular-outline',
       title: 'Audit your subscriptions',
       description: `You're spending $${subSpending.toFixed(2)}/mo on subscriptions. Review each one — canceling even one unused service adds up over the year.`,
       impact: `Cancel 1 service = ~$${Math.round(subSpending / subTransactions.length * 12)}/yr saved`,
@@ -278,7 +278,7 @@ export function generateActionPlan(): Action[] {
     actions.push({
       id: 'dining',
       priority: 'medium',
-      icon: '🍽️',
+      icon: 'restaurant-outline',
       title: 'Cut back on dining out',
       description: `You've spent $${diningSpending.toFixed(2)} on dining this month. Cooking at home even 2 extra nights per week can meaningfully reduce this.`,
       impact: `Could save $${Math.round(diningSpending * 0.3)}/mo`,
@@ -291,7 +291,7 @@ export function generateActionPlan(): Action[] {
     actions.push({
       id: 'invest',
       priority: 'low',
-      icon: '📈',
+      icon: 'trending-up-outline',
       title: 'Start investing your surplus',
       description: `Your finances are in great shape. Consider putting extra savings into an index fund or high-yield savings account to make your money work for you.`,
       impact: 'Grow wealth passively over time',
@@ -304,7 +304,7 @@ export function generateActionPlan(): Action[] {
     actions.push({
       id: 'automate',
       priority: monthsOfCushion < 2 ? 'medium' : 'low',
-      icon: '🔄',
+      icon: 'refresh-outline',
       title: 'Automate a weekly savings transfer',
       description: `Set up a recurring $25–$50 weekly transfer to your savings account. Automating removes the temptation to spend it and builds your cushion without thinking.`,
       impact: '$50/wk = $2,600 saved in a year',

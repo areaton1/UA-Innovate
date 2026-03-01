@@ -1,35 +1,39 @@
 import { Tabs } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/theme';
 
 const ForecastArrowIcon = require('@/assets/icon-forecast-arrow.svg').default;
 
+const TAB_ICONS: Record<string, { outline: string; filled: string }> = {
+  Home:             { outline: 'home-outline',         filled: 'home' },
+  Transactions:     { outline: 'list-outline',         filled: 'list' },
+  Challenges:       { outline: 'trophy-outline',       filled: 'trophy' },
+};
+
 function TabIcon({ label, active, color }: { label: string; active: boolean; color?: string }) {
+  const iconColor = color ?? (active ? colors.primary : '#888');
+
   if (label === 'Spending Forecast') {
     return (
       <View style={tabStyles.container}>
-        <ForecastArrowIcon width={22} height={22} color={color ?? (active ? colors.primary : '#888')} />
+        <ForecastArrowIcon width={22} height={22} color={iconColor} />
       </View>
     );
   }
-  const icons: Record<string, string> = {
-    Home: '⌂',
-    Transactions: '≡',
-    Challenges: '🏆',
-  };
+
+  const iconNames = TAB_ICONS[label];
+  const iconName = (active ? iconNames?.filled : iconNames?.outline) ?? 'ellipse-outline';
+
   return (
     <View style={tabStyles.container}>
-      <Text style={[tabStyles.icon, active && tabStyles.activeIcon]}>
-        {icons[label] ?? '○'}
-      </Text>
+      <Ionicons name={iconName as any} size={22} color={iconColor} />
     </View>
   );
 }
 
 const tabStyles = StyleSheet.create({
   container: { alignItems: 'center' },
-  icon: { fontSize: 20, color: '#888' },
-  activeIcon: { color: colors.primary },
 });
 
 export default function TabsLayout() {

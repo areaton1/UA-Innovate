@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
 import type { Subscription } from '@/app/data/mockData';
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -26,7 +27,7 @@ export default function SubscriptionRow({ subscription }: Props) {
   return (
     <View style={styles.row}>
       <View style={[styles.iconCircle, { backgroundColor: categoryColor + '18' }]}>
-        <Text style={styles.icon}>{subscription.icon}</Text>
+        <Ionicons name={subscription.icon as any} size={20} color={categoryColor} />
       </View>
 
       <View style={styles.info}>
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
-  icon: { fontSize: 20 },
+  icon: {},
   info: { flex: 1 },
   name: { fontWeight: '600', color: colors.text, fontSize: 14, marginBottom: 4 },
   meta: { flexDirection: 'row', alignItems: 'center', gap: 8 },

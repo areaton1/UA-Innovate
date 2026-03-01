@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import {
   INITIAL_CHALLENGES,
   LEADERBOARD,
@@ -49,7 +50,7 @@ function RankCard({ xp }: { xp: number }) {
         <View>
           <Text style={styles.rankGreeting}>Your Rank</Text>
           <View style={styles.rankTierRow}>
-            <Text style={styles.rankTierBadge}>{tier.badge}</Text>
+            <Ionicons name={tier.badge as any} size={24} color={tier.color} />
             <Text style={[styles.rankTierName, { color: tier.color }]}>{tier.name}</Text>
           </View>
         </View>
@@ -63,7 +64,7 @@ function RankCard({ xp }: { xp: number }) {
         <>
           <View style={styles.rankProgressRow}>
             <Text style={styles.rankProgressLabel}>
-              {nextTier.minXP - xp} XP to {nextTier.badge} {nextTier.name}
+              {nextTier.minXP - xp} XP to {nextTier.name}
             </Text>
             <Text style={styles.rankProgressPct}>{Math.round(progress)}%</Text>
           </View>
@@ -97,7 +98,7 @@ function ChallengeCard({
   return (
     <View style={[styles.challengeCard, { borderLeftColor: cfg.color, borderLeftWidth: 4 }]}>
       <View style={styles.challengeTop}>
-        <Text style={styles.challengeIcon}>{challenge.icon}</Text>
+        <Ionicons name={challenge.icon as any} size={28} color="#555" style={styles.challengeIcon} />
         <View style={styles.challengeInfo}>
           <View style={styles.challengeHeaderRow}>
             <Text style={styles.challengeTitle}>{challenge.title}</Text>
@@ -108,7 +109,10 @@ function ChallengeCard({
           <Text style={styles.challengeDesc}>{challenge.description}</Text>
 
           <View style={styles.challengeMeta}>
-            <Text style={styles.challengeDuration}>⏱ {challenge.duration}</Text>
+            <View style={styles.challengeDurationRow}>
+              <Ionicons name="time-outline" size={12} color="#888" />
+              <Text style={styles.challengeDuration}>{challenge.duration}</Text>
+            </View>
             <View style={styles.xpBadge}>
               <Text style={styles.xpBadgeText}>+{challenge.xp} XP</Text>
             </View>
@@ -139,7 +143,7 @@ function ChallengeCard({
           style={styles.completeBtn}
           onPress={() => onComplete(challenge.id)}
         >
-          <Text style={styles.completeBtnText}>Mark Complete ✓</Text>
+          <Text style={styles.completeBtnText}>Mark Complete</Text>
         </TouchableOpacity>
       )}
 
@@ -148,7 +152,7 @@ function ChallengeCard({
           style={styles.startBtn}
           onPress={() => onStart(challenge.id)}
         >
-          <Text style={styles.startBtnText}>Start Challenge →</Text>
+          <Text style={styles.startBtnText}>Start Challenge</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -165,9 +169,16 @@ function LeaderboardRow({ entry }: { entry: (typeof LEADERBOARD)[0] }) {
 
   return (
     <View style={[styles.lbRow, isUser && styles.lbRowHighlight]}>
-      <Text style={styles.lbRankNum}>
-        {entry.rank <= 3 ? ['🥇', '🥈', '🥉'][entry.rank - 1] : `#${entry.rank}`}
-      </Text>
+      {entry.rank <= 3 ? (
+        <Ionicons
+          name="trophy-outline"
+          size={18}
+          color={['#FFB300', '#9E9E9E', '#CD7F32'][entry.rank - 1]}
+          style={styles.lbRankTrophy}
+        />
+      ) : (
+        <Text style={styles.lbRankNum}>{`#${entry.rank}`}</Text>
+      )}
       <View style={[styles.lbAvatar, { backgroundColor: entry.avatarColor }]}>
         <Text style={styles.lbAvatarText}>{initial}</Text>
       </View>
@@ -259,7 +270,10 @@ export default function ChallengesScreen() {
         {/* Completed */}
         {completed.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>Completed ✓</Text>
+            <View style={styles.sectionTitleRow}>
+              <Text style={styles.sectionTitle}>Completed</Text>
+              <Ionicons name="checkmark-circle" size={18} color="#2E7D32" />
+            </View>
             {completed.map((c) => (
               <ChallengeCard
                 key={c.id}
@@ -327,7 +341,7 @@ const styles = StyleSheet.create({
   },
   rankGreeting: { fontSize: 12, color: '#888', fontWeight: '600' },
   rankTierRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
-  rankTierBadge: { fontSize: 24 },
+  rankTierBadge: {},
   rankTierName: { fontSize: 22, fontWeight: '900' },
   rankXPBox: {
     alignItems: 'center',
@@ -356,6 +370,7 @@ const styles = StyleSheet.create({
   progressFill: { height: 6, borderRadius: 3 },
 
   // Section
+  sectionTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10, marginTop: 4 },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700',
@@ -377,7 +392,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   challengeTop: { flexDirection: 'row', gap: 12 },
-  challengeIcon: { fontSize: 28, marginTop: 2 },
+  challengeIcon: { marginTop: 2 },
   challengeInfo: { flex: 1 },
   challengeHeaderRow: {
     flexDirection: 'row',
@@ -391,6 +406,7 @@ const styles = StyleSheet.create({
   statusLabel: { fontSize: 10, fontWeight: '700' },
   challengeDesc: { fontSize: 12, color: '#666', lineHeight: 17, marginBottom: 8 },
   challengeMeta: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  challengeDurationRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   challengeDuration: { fontSize: 11, color: '#888' },
   xpBadge: {
     backgroundColor: '#FFF8E6',
@@ -448,6 +464,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   lbRowHighlight: { backgroundColor: '#EEF4FB' },
+  lbRankTrophy: { width: 32, textAlign: 'center' },
   lbRankNum: { fontSize: 16, width: 32, textAlign: 'center', color: '#888' },
   lbAvatar: {
     width: 36,

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { MOCK_ACCOUNTS } from '@/app/data/mockData';
 import { colors, spacing, typography } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
 
 type Props = {
   visible: boolean;
@@ -19,12 +20,12 @@ type Props = {
 };
 
 const PAYEES = [
-  { id: 'elec', name: 'Alabama Power', icon: '⚡' },
-  { id: 'water', name: 'City Water Works', icon: '💧' },
-  { id: 'internet', name: 'Spectrum Internet', icon: '🌐' },
-  { id: 'phone', name: 'AT&T Wireless', icon: '📱' },
-  { id: 'insurance', name: 'State Farm', icon: '🛡' },
-  { id: 'rent', name: 'Rental Management Co.', icon: '🏠' },
+  { id: 'elec', name: 'Alabama Power', icon: 'flash-outline' },
+  { id: 'water', name: 'City Water Works', icon: 'water-outline' },
+  { id: 'internet', name: 'Spectrum Internet', icon: 'wifi-outline' },
+  { id: 'phone', name: 'AT&T Wireless', icon: 'phone-portrait-outline' },
+  { id: 'insurance', name: 'State Farm', icon: 'shield-checkmark-outline' },
+  { id: 'rent', name: 'Rental Management Co.', icon: 'home-outline' },
 ];
 
 const PAY_ACCOUNTS = MOCK_ACCOUNTS.filter((a) => a.type !== 'Credit');
@@ -65,7 +66,9 @@ export default function PayBillsModal({ visible, onClose }: Props) {
 
           {success ? (
             <View style={styles.successContainer}>
-              <Text style={styles.successIcon}>✓</Text>
+              <View style={styles.successIcon}>
+                <Ionicons name="checkmark" size={40} color="#2e7d32" />
+              </View>
               <Text style={styles.successTitle}>Payment Scheduled</Text>
               <Text style={styles.successSub}>
                 ${Number(amount).toFixed(2)} to {selectedPayee.name}{'\n'}scheduled for {dueDateStr}
@@ -90,11 +93,11 @@ export default function PayBillsModal({ visible, onClose }: Props) {
                   style={[styles.payeeRow, payeeId === payee.id && styles.payeeRowActive]}
                   onPress={() => setPayeeId(payee.id)}
                 >
-                  <Text style={styles.payeeIcon}>{payee.icon}</Text>
+                  <Ionicons name={payee.icon as any} size={18} color={colors.navBg} style={styles.payeeIcon} />
                   <Text style={[styles.payeeName, payeeId === payee.id && styles.payeeNameActive]}>
                     {payee.name}
                   </Text>
-                  {payeeId === payee.id && <Text style={styles.checkmark}>✓</Text>}
+                  {payeeId === payee.id && <Ionicons name="checkmark-circle" size={18} color={colors.primary} />}
                 </TouchableOpacity>
               ))}
 
@@ -194,10 +197,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.offWhite,
   },
   payeeRowActive: { borderColor: colors.primary, backgroundColor: '#fff4eb' },
-  payeeIcon: { fontSize: 20, marginRight: 12 },
+  payeeIcon: { marginRight: 12 },
   payeeName: { flex: 1, fontSize: 14, fontWeight: '600', color: colors.text },
   payeeNameActive: { color: colors.primary },
-  checkmark: { color: colors.primary, fontSize: 16, fontWeight: '700' },
   pickerRow: { flexDirection: 'row', gap: 8, marginBottom: 14 },
   pickerChip: {
     flex: 1,
@@ -251,14 +253,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
   },
   successIcon: {
-    fontSize: 52,
-    color: '#2e7d32',
     backgroundColor: '#e8f5e9',
     width: 80,
     height: 80,
-    textAlign: 'center',
-    lineHeight: 80,
     borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden',
     marginBottom: 16,
   },
