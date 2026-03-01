@@ -300,6 +300,7 @@ export default function TransactionsScreen() {
             showsHorizontalScrollIndicator={false}
             data={CATEGORIES}
             keyExtractor={(item) => item}
+            style={styles.categoryFlatList}
             contentContainerStyle={styles.categoryList}
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -460,14 +461,17 @@ const styles = StyleSheet.create({
   searchIcon: { fontSize: 16, marginRight: 8 },
   searchInput: { flex: 1, fontSize: 14, color: colors.text },
   clearSearch: { color: '#888', fontSize: 16, padding: 4 },
-  categoryList: { paddingHorizontal: spacing.md, paddingBottom: 10, gap: 8 },
+  categoryFlatList: { height: 44, flexGrow: 0, flexShrink: 0 },
+  categoryList: { paddingHorizontal: spacing.md, paddingBottom: 10, gap: 8, alignItems: 'center' },
   categoryChip: {
+    height: 32,
     paddingHorizontal: 14,
-    paddingVertical: 6,
     borderRadius: 20,
     backgroundColor: colors.white,
     borderWidth: 1.5,
     borderColor: colors.border,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   categoryChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   categoryChipText: { fontSize: 13, fontWeight: '600', color: colors.textMuted },
