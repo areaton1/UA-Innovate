@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,9 +8,8 @@ import ActionPlanCard from '../../components/ActionPlanCard';
 import ChallengesView from '../../components/ChallengesView';
 import GoalsView from '../../components/GoalsView';
 import { ForecastContent } from './future-forecast';
-import { colors } from '@/constants/theme';
-import { generateAIInsight } from '@/app/data/aiService';
-import { GEMINI_API_KEY } from '@/constants/aiConfig';
+
+const PNC_NAVY = '#003087';
 
 type Section = 'insights' | 'challenges' | 'forecast' | 'goals';
 
@@ -23,23 +22,13 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
 
 export default function CompassScreen() {
   const [section, setSection] = useState<Section>('insights');
-  const [aiInsight, setAiInsight] = useState<string | undefined>();
-  const [aiLoading, setAiLoading] = useState(GEMINI_API_KEY !== 'YOUR_GEMINI_KEY_HERE');
-
-  useEffect(() => {
-    if (GEMINI_API_KEY === 'YOUR_GEMINI_KEY_HERE') return;
-    generateAIInsight()
-      .then(setAiInsight)
-      .catch(() => setAiInsight(undefined))
-      .finally(() => setAiLoading(false));
-  }, []);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Navbar */}
       <View style={styles.navbar}>
         <View style={styles.navRow}>
-          <Ionicons name="compass-outline" size={20} color={colors.primary} />
+          <Ionicons name="compass-outline" size={20} color="#A8C8E8" />
           <Text style={styles.navTitle}>PNC Compass</Text>
         </View>
         <Text style={styles.navSubtitle}>Your financial navigation center</Text>
@@ -75,7 +64,7 @@ export default function CompassScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.insightsScroll}
         >
-          <ConfidenceScoreCard aiInsight={aiInsight} aiLoading={aiLoading} />
+          <ConfidenceScoreCard />
           <SafeToSpendWidget />
           <ActionPlanCard />
           <View style={{ height: 24 }} />
@@ -97,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F6F9',
   },
   navbar: {
-    backgroundColor: colors.navBg,
+    backgroundColor: PNC_NAVY,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
@@ -112,7 +101,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   navSubtitle: {
-    color: '#b0bec5',
+    color: '#A8C8E8',
     fontSize: 12,
     marginTop: 3,
   },
@@ -141,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F2F5',
   },
   segmentActive: {
-    backgroundColor: colors.primary,
+    backgroundColor: PNC_NAVY,
   },
   segmentText: {
     fontSize: 12,
