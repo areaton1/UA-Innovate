@@ -14,9 +14,9 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useAccounts } from '../context/AccountsContext';
 import { MOCK_TRANSACTIONS, MOCK_USER, MOCK_SUBSCRIPTIONS } from '../data/mockData';
+import { colors } from '../constants/theme';
 
 const PNC_ORANGE = '#EF7622';
-const NAVY = '#003087';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   header: {
-    backgroundColor: NAVY,
+    backgroundColor: colors.navBg,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
