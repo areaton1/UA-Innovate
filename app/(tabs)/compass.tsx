@@ -11,6 +11,7 @@ import GoalsView from '../../components/GoalsView';
 import { ForecastContent } from './future-forecast';
 import { colors } from '../../constants/theme';
 
+const PncLogo = require('../../assets/pnc-logo-rev.svg').default;
 const PNC_ORANGE = '#EF7622';
 const GREY_BG = '#F4F6F9';
 
@@ -40,10 +41,7 @@ export default function CompassScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Navbar */}
       <View style={styles.navbar}>
-        <View style={styles.navRow}>
-          <Ionicons name="compass-outline" size={20} color={PNC_ORANGE} />
-          <Text style={styles.navTitle}>PNC Compass</Text>
-        </View>
+        <PncLogo width={80} height={32} />
         <Text style={styles.navSubtitle}>Your financial navigation center</Text>
       </View>
 
@@ -102,16 +100,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.navBg,
     paddingHorizontal: 16,
     paddingVertical: 14,
-  },
-  navRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  navTitle: {
-    color: colors.white,
-    fontSize: 20,
-    fontWeight: '800',
   },
   navSubtitle: {
     color: '#b0bec5',

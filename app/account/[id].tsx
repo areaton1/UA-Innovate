@@ -209,12 +209,27 @@ export default function AccountDetailScreen() {
                 <Text style={styles.infoLabel}>Purchase APR</Text>
                 <Text style={styles.infoValue}>{account.apr}% (variable)</Text>
               </View>
-              <View style={[styles.infoRow, styles.infoRowLast]}>
-                <Text style={styles.infoLabel}>Credit Utilization</Text>
-                <Text style={[styles.infoValue, { color: '#2e7d32', fontWeight: '700' }]}>
-                  {(Math.abs(account.balance) / account.creditLimit! * 100).toFixed(1)}% — Excellent
-                </Text>
-              </View>
+              {(() => {
+                const utilPct = Math.abs(account.balance) / account.creditLimit! * 100;
+                const utilColor =
+                  utilPct < 10 ? '#2e7d32' :
+                  utilPct < 30 ? '#F9A825' :
+                  utilPct < 50 ? '#EF6C00' :
+                  '#c62828';
+                const utilLabel =
+                  utilPct < 10 ? 'Excellent' :
+                  utilPct < 30 ? 'Good' :
+                  utilPct < 50 ? 'Fair' :
+                  'High';
+                return (
+                  <View style={[styles.infoRow, styles.infoRowLast]}>
+                    <Text style={styles.infoLabel}>Credit Utilization</Text>
+                    <Text style={[styles.infoValue, { color: utilColor, fontWeight: '700' }]}>
+                      {utilPct.toFixed(1)}% — {utilLabel}
+                    </Text>
+                  </View>
+                );
+              })()}
             </View>
 
             <View style={styles.infoCard}>
