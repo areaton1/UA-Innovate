@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { calculateSafeToSpend } from '@/app/data/financialEngine';
+import { calculateSafeToSpend } from '../data/financialEngine';
 
 const PNC_ORANGE = '#EF7622';
 const PNC_NAVY = '#003087';

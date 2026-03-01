@@ -15,12 +15,12 @@ import {
   MOCK_SUBSCRIPTIONS,
   type Transaction,
   type SubscriptionCategory,
-} from '../data/mockData';
-import { colors, spacing, typography } from '@/constants/theme';
+} from '../../data/mockData';
+import { colors, spacing, typography } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
-import SubscriptionRow from '@/components/SubscriptionRow';
-import SpendingBar from '@/components/SpendingBar';
-import MiniBarChart from '@/components/MiniBarChart';
+import SubscriptionRow from '../../components/SubscriptionRow';
+import SpendingBar from '../../components/SpendingBar';
+import MiniBarChart from '../../components/MiniBarChart';
 
 type ScreenMode = 'transactions' | 'radar';
 

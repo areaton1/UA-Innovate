@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { Header } from "@/components/Header";
-import { products } from "@/constants/products";
-import { colors as themeColors, spacing, typography as themeTypo } from "@/constants/theme";
+import { Header } from "../components/Header";
+import { products } from "../constants/products";
+import { colors as themeColors, spacing, typography as themeTypo } from "../constants/theme";
 
 export default function ProductsScreen() {
   const router = useRouter();

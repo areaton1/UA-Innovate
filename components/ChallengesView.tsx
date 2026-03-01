@@ -14,7 +14,7 @@ import {
   getNextTier,
   type Challenge,
   type ChallengeStatus,
-} from '@/app/data/challengesData';
+} from '../data/challengesData';
 
 const PNC_NAVY = '#003087';
 const PNC_ORANGE = '#EF7622';

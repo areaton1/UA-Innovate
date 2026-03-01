@@ -10,15 +10,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS } from '../data/mockData';
-import { useAuth } from '../context/AuthContext';
-import { colors, spacing, typography } from '@/constants/theme';
-import TransferModal from '@/components/TransferModal';
-import PayBillsModal from '@/components/PayBillsModal';
-import DepositModal from '@/components/DepositModal';
-import ZelleModal from '@/components/ZelleModal';
+import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS } from '../../data/mockData';
+import { useAuth } from '../../context/AuthContext';
+import { colors, spacing, typography } from '../../constants/theme';
+import TransferModal from '../../components/TransferModal';
+import PayBillsModal from '../../components/PayBillsModal';
+import DepositModal from '../../components/DepositModal';
+import ZelleModal from '../../components/ZelleModal';
 
-const PncLogo = require('@/assets/pnc-logo-rev.svg').default;
+const PncLogo = require('../../assets/pnc-logo-rev.svg').default;
 
 function formatCurrency(amount: number) {
   const abs = Math.abs(amount);

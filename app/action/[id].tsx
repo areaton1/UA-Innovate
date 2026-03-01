@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { generateActionPlan, type ActionPriority } from '@/app/data/financialEngine';
+import { generateActionPlan, type ActionPriority } from '../../data/financialEngine';
 
 const PNC_NAVY = '#003087';
 

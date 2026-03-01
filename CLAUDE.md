@@ -82,6 +82,6 @@ These are the planned AI/smart features to add to the app:
 ## Rules / Preferences
 - **Never auto-commit** — always ask before running `git commit`
 - **Always use TypeScript** — no `.js` files
-- **Keep all mock/fake data in `app/data/`**
+- **Keep all mock/fake data in `app/_data/`** (underscore prefix so Expo Router doesn’t treat it as a route)
 - **Always match PNC brand colors** — use the constants defined above
 - **No backend yet** — build features with mock data first, design so a real API can be swapped in later

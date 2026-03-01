@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuth } from '../context/AuthContext';
-import { colors, spacing, typography } from '@/constants/theme';
+import { useAuth } from '../../context/AuthContext';
+import { colors, spacing, typography } from '../../constants/theme';
 
-const PncLogo = require('@/assets/pnc-logo-rev.svg').default;
+const PncLogo = require('../../assets/pnc-logo-rev.svg').default;
 
 export default function LoginScreen() {
   const router = useRouter();

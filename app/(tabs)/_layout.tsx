@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@/constants/theme';
+import { colors } from '../../constants/theme';
 
 const TAB_ICONS: Record<string, { outline: string; filled: string }> = {
   Home:         { outline: 'home-outline',    filled: 'home' },

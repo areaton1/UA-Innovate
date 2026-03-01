@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path, Defs, LinearGradient, Stop, Line, Polyline, Rect, Circle } from 'react-native-svg';
-import { MOCK_ACCOUNTS, MOCK_TRANSACTIONS } from '../data/mockData';
-import { runFullMonteCarlo } from '../lib/monteCarlo';
-import type { FullForecastResult, HistogramBin, MonthRiskLabel, BalanceDistributionAtPeriod } from '../lib/monteCarlo';
-import { colors, spacing, typography } from '@/constants/theme';
+import { MOCK_ACCOUNTS, MOCK_TRANSACTIONS } from '../../data/mockData';
+import { runFullMonteCarlo } from '../../lib/monteCarlo';
+import type { FullForecastResult, HistogramBin, MonthRiskLabel, BalanceDistributionAtPeriod } from '../../lib/monteCarlo';
+import { colors, spacing, typography } from '../../constants/theme';
 
 const CHART_HEIGHT = 220;
 const CHART_INNER_PADDING = { top: 20, right: 16, bottom: 28, left: 52 };

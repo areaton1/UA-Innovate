@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
-import type { Subscription } from '@/app/data/mockData';
+import type { Subscription } from '../data/mockData';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Streaming: '#0069aa',

@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { Header } from "@/components/Header";
-import { Button } from "@/components/Button";
-import { Card } from "@/components/Card";
-import { colors, spacing, typography } from "@/constants/theme";
-import { products } from "@/constants/products";
+import { Header } from "../components/Header";
+import { Button } from "../components/Button";
+import { Card } from "../components/Card";
+import { colors, spacing, typography } from "../constants/theme";
+import { products } from "../constants/products";
 
 export default function HomeScreen() {
   const router = useRouter();

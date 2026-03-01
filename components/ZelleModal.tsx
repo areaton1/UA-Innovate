@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { MOCK_ACCOUNTS } from '@/app/data/mockData';
+import { MOCK_ACCOUNTS } from '../data/mockData';
 import { colors, spacing, typography } from '@/constants/theme';
 
 type Props = {

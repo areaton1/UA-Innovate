@@ -316,3 +316,30 @@ export function generateActionPlan(): Action[] {
   const order: Record<ActionPriority, number> = { high: 0, medium: 1, low: 2 };
   return actions.sort((a, b) => order[a.priority] - order[b.priority]);
 }
+
+// ─── Financial context for goals (suggestions) ───────────────────────────────
+
+export type FinancialContextForGoals = {
+  monthlyIncome: number;
+  monthlySpending: number;
+  diningSpending: number;
+  subscriptionSpending: number;
+};
+
+export function getFinancialContextForGoals(): FinancialContextForGoals {
+  const txs = getThisMonthTransactions();
+  const monthlyIncome = getTotalIncome(txs) || 2450;
+  const monthlySpending = getTotalSpending(txs);
+  const diningSpending = txs
+    .filter((t) => t.category === 'Food & Dining')
+    .reduce((s, t) => s + Math.abs(t.amount), 0);
+  const subscriptionSpending = txs
+    .filter((t) => t.category === 'Subscriptions')
+    .reduce((s, t) => s + Math.abs(t.amount), 0);
+  return {
+    monthlyIncome,
+    monthlySpending,
+    diningSpending,
+    subscriptionSpending,
+  };
+}

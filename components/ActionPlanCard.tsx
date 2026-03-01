@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { generateActionPlan, type Action, type ActionPriority } from '@/app/data/financialEngine';
+import { generateActionPlan, type Action, type ActionPriority } from '../data/financialEngine';
 
 const PNC_NAVY = '#003087';
 

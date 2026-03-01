@@ -7,8 +7,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MOCK_ACCOUNTS, MOCK_TRANSACTIONS, MOCK_SUBSCRIPTIONS } from '@/app/data/mockData';
-import { colors, spacing, typography } from '@/constants/theme';
+import { MOCK_ACCOUNTS, MOCK_TRANSACTIONS, MOCK_SUBSCRIPTIONS } from '../../data/mockData';
+import { colors, spacing, typography } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 
 function formatCurrency(amount: number) {
