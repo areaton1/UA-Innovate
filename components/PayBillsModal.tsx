@@ -9,8 +9,10 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { MOCK_ACCOUNTS } from '../data/mockData';
+import { useAccounts } from '../context/AccountsContext';
 import { colors, spacing, typography } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -31,6 +33,7 @@ const PAYEES = [
 const PAY_ACCOUNTS = MOCK_ACCOUNTS.filter((a) => a.type !== 'Credit');
 
 export default function PayBillsModal({ visible, onClose }: Props) {
+  const { adjustBalance, accounts } = useAccounts();
   const [payeeId, setPayeeId] = useState(PAYEES[0].id);
   const [accountId, setAccountId] = useState(PAY_ACCOUNTS[0]?.id ?? MOCK_ACCOUNTS[0].id);
   const [amount, setAmount] = useState('');
@@ -50,6 +53,13 @@ export default function PayBillsModal({ visible, onClose }: Props) {
 
   function handleSubmit() {
     if (!amount || isNaN(Number(amount))) return;
+    const amt = Number(amount);
+    const account = accounts.find((a) => a.id === accountId)!;
+    if (amt > account.available) {
+      Alert.alert('Insufficient funds', `Available balance is $${account.available.toFixed(2)}.`);
+      return;
+    }
+    adjustBalance(accountId, -amt);
     setSuccess(true);
   }
 

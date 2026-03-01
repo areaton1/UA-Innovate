@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useGoals } from '../context/GoalsContext';
+import { useAccounts } from '../context/AccountsContext';
 import {
   getGoalTimeline,
   getGoalSuggestions,
@@ -42,16 +43,39 @@ function GoalCard({
   suggestions,
   onUpdateCurrent,
   onDelete,
+  onFundsAdded,
+  savingsAvailable,
 }: {
   goal: SavingsGoal;
   timeline: ReturnType<typeof getGoalTimeline>;
   suggestions: GoalSuggestion[];
   onUpdateCurrent: (id: string, currentAmount: number) => void;
   onDelete: (id: string) => void;
+  onFundsAdded: (amount: number) => void;
+  savingsAvailable: number;
 }) {
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [addingFunds, setAddingFunds] = useState(false);
+  const [addAmount, setAddAmount] = useState('');
+  const inputRef = useRef<TextInput>(null);
   const progress = Math.min(100, timeline.progressPercent);
   const iconName = (goal.icon || DEFAULT_GOAL_ICONS.general) as any;
+
+  function handleAddFunds() {
+    const amt = parseFloat(addAmount);
+    if (isNaN(amt) || amt <= 0) {
+      Alert.alert('Invalid amount', 'Please enter a positive number.');
+      return;
+    }
+    if (amt > savingsAvailable) {
+      Alert.alert('Insufficient funds', `Savings available balance is $${savingsAvailable.toFixed(2)}.`);
+      return;
+    }
+    onUpdateCurrent(goal.id, goal.currentAmount + amt);
+    onFundsAdded(amt);
+    setAddAmount('');
+    setAddingFunds(false);
+  }
 
   return (
     <View style={styles.goalCard}>
@@ -141,6 +165,37 @@ function GoalCard({
               </View>
             </View>
           ))}
+        </View>
+      )}
+
+      <TouchableOpacity
+        style={styles.addFundsBtn}
+        onPress={() => {
+          setAddingFunds((v) => !v);
+          if (!addingFunds) setTimeout(() => inputRef.current?.focus(), 100);
+        }}
+        activeOpacity={0.7}
+      >
+        <Ionicons name={addingFunds ? 'close-circle-outline' : 'add-circle-outline'} size={16} color={PNC_ORANGE} />
+        <Text style={styles.addFundsBtnText}>{addingFunds ? 'Cancel' : 'Add Funds'}</Text>
+      </TouchableOpacity>
+
+      {addingFunds && (
+        <View style={styles.addFundsRow}>
+          <TextInput
+            ref={inputRef}
+            style={styles.addFundsInput}
+            placeholder="Amount ($)"
+            placeholderTextColor="#999"
+            keyboardType="decimal-pad"
+            value={addAmount}
+            onChangeText={setAddAmount}
+            onSubmitEditing={handleAddFunds}
+            returnKeyType="done"
+          />
+          <TouchableOpacity style={styles.addFundsConfirm} onPress={handleAddFunds} activeOpacity={0.8}>
+            <Text style={styles.addFundsConfirmText}>Add</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -267,6 +322,8 @@ function AddGoalModal({
 
 export default function GoalsView() {
   const { goals, addGoal, updateGoal, deleteGoal } = useGoals();
+  const { adjustBalance, accounts } = useAccounts();
+  const savingsAvailable = accounts.find((a) => a.id === '2')?.available ?? 0;
   const [addModalVisible, setAddModalVisible] = useState(false);
   const financialContext = getFinancialContextForGoals();
 
@@ -323,6 +380,8 @@ export default function GoalsView() {
               suggestions={suggestions}
               onUpdateCurrent={(id, amount) => updateGoal(id, { currentAmount: amount })}
               onDelete={deleteGoal}
+              onFundsAdded={(amt) => adjustBalance('2', -amt)}
+              savingsAvailable={savingsAvailable}
             />
           );
         })
@@ -441,6 +500,40 @@ const styles = StyleSheet.create({
   suggestionTitle: { fontSize: 13, fontWeight: '700', color: '#333' },
   suggestionDesc: { fontSize: 12, color: '#666', marginTop: 2 },
   suggestionImpact: { fontSize: 11, color: PNC_ORANGE, marginTop: 2, fontWeight: '600' },
+
+  addFundsBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+  },
+  addFundsBtnText: { fontSize: 13, fontWeight: '600', color: PNC_ORANGE },
+  addFundsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 10,
+  },
+  addFundsInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 15,
+    color: '#222',
+  },
+  addFundsConfirm: {
+    backgroundColor: PNC_ORANGE,
+    borderRadius: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 9,
+  },
+  addFundsConfirmText: { color: '#fff', fontWeight: '700', fontSize: 14 },
 
   modalOverlay: {
     flex: 1,

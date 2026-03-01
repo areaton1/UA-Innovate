@@ -9,8 +9,10 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { MOCK_ACCOUNTS } from '../data/mockData';
+import { useAccounts } from '../context/AccountsContext';
 import { colors, spacing, typography } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -20,6 +22,7 @@ type Props = {
 };
 
 export default function TransferModal({ visible, onClose }: Props) {
+  const { transfer, accounts } = useAccounts();
   const [fromId, setFromId] = useState(MOCK_ACCOUNTS[0].id);
   const [toId, setToId] = useState(MOCK_ACCOUNTS[1].id);
   const [amount, setAmount] = useState('');
@@ -41,10 +44,17 @@ export default function TransferModal({ visible, onClose }: Props) {
 
   function handleSubmit() {
     if (!amount || isNaN(Number(amount))) return;
+    const amt = Number(amount);
+    const fromAccount = accounts.find((a) => a.id === fromId)!;
+    if (amt > fromAccount.available) {
+      Alert.alert('Insufficient funds', `Available balance is $${fromAccount.available.toFixed(2)}.`);
+      return;
+    }
+    transfer(fromId, toId, amt);
     setSuccess(true);
   }
 
-  const fromAccount = MOCK_ACCOUNTS.find((a) => a.id === fromId)!;
+  const fromAccount = accounts.find((a) => a.id === fromId) ?? MOCK_ACCOUNTS.find((a) => a.id === fromId)!;
   const toAccount = MOCK_ACCOUNTS.find((a) => a.id === toId)!;
 
   return (

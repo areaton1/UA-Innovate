@@ -4,11 +4,10 @@ import { MOCK_ACCOUNTS, MOCK_TRANSACTIONS, Transaction } from './mockData';
 
 function getThisMonthTransactions(): Transaction[] {
   const now = new Date();
-  const month = now.getMonth();
-  const year = now.getFullYear();
+  const cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
   return MOCK_TRANSACTIONS.filter((t) => {
     const d = new Date(t.date + 'T00:00:00');
-    return d.getMonth() === month && d.getFullYear() === year;
+    return d >= cutoff;
   });
 }
 

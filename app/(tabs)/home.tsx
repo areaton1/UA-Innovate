@@ -10,8 +10,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS } from '../../data/mockData';
+import { MOCK_USER, MOCK_TRANSACTIONS } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
+import { useAccounts } from '../../context/AccountsContext';
 import { colors, spacing, typography } from '../../constants/theme';
 import TransferModal from '../../components/TransferModal';
 import PayBillsModal from '../../components/PayBillsModal';
@@ -26,10 +27,6 @@ function formatCurrency(amount: number) {
   return amount < 0 ? `-$${formatted}` : `$${formatted}`;
 }
 
-function formatCurrencyAbs(amount: number) {
-  const abs = Math.abs(amount);
-  return '$' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr + 'T00:00:00');
@@ -39,6 +36,7 @@ function formatDate(dateStr: string) {
 export default function HomeScreen() {
   const router = useRouter();
   const { logout } = useAuth();
+  const { accounts } = useAccounts();
   const [balancesHidden, setBalancesHidden] = useState(false);
   const [showTransfer, setShowTransfer] = useState(false);
   const [showPayBills, setShowPayBills] = useState(false);
@@ -79,7 +77,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {MOCK_ACCOUNTS.map((account) => (
+        {accounts.map((account) => (
           <TouchableOpacity
             key={account.id}
             style={styles.accountCard}
@@ -99,11 +97,11 @@ export default function HomeScreen() {
               <Text style={styles.balanceLabel}>
                 {account.type === 'Credit' ? 'Balance Due' : 'Available'}
               </Text>
-              <Text style={styles.balanceAmount}>
+              <Text style={[styles.balanceAmount, account.type === 'Credit' && styles.negativeBalance]}>
                 {balancesHidden
                   ? '••••••'
                   : account.type === 'Credit'
-                  ? formatCurrencyAbs(account.balance)
+                  ? formatCurrency(account.balance)
                   : formatCurrency(account.available)}
               </Text>
             </View>

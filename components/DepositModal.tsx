@@ -11,6 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { MOCK_ACCOUNTS } from '../data/mockData';
+import { useAccounts } from '../context/AccountsContext';
 import { colors, spacing, typography } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -22,6 +23,7 @@ type Props = {
 const DEPOSIT_ACCOUNTS = MOCK_ACCOUNTS.filter((a) => a.type !== 'Credit');
 
 export default function DepositModal({ visible, onClose }: Props) {
+  const { adjustBalance } = useAccounts();
   const [accountId, setAccountId] = useState(DEPOSIT_ACCOUNTS[0]?.id ?? MOCK_ACCOUNTS[0].id);
   const [amount, setAmount] = useState('');
   const [photoTaken, setPhotoTaken] = useState(false);
@@ -41,6 +43,7 @@ export default function DepositModal({ visible, onClose }: Props) {
 
   function handleSubmit() {
     if (!amount || isNaN(Number(amount))) return;
+    adjustBalance(accountId, Number(amount));
     setSuccess(true);
   }
 

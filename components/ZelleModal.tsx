@@ -9,8 +9,10 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { MOCK_ACCOUNTS } from '../data/mockData';
+import { useAccounts } from '../context/AccountsContext';
 import { colors, spacing, typography } from '@/constants/theme';
 
 type Props = {
@@ -27,6 +29,7 @@ const RECENT_CONTACTS = [
 const ZELLE_ACCOUNTS = MOCK_ACCOUNTS.filter((a) => a.type !== 'Credit');
 
 export default function ZelleModal({ visible, onClose }: Props) {
+  const { adjustBalance, accounts } = useAccounts();
   const [recipient, setRecipient] = useState('');
   const [selectedContact, setSelectedContact] = useState<string | null>(null);
   const [accountId, setAccountId] = useState(ZELLE_ACCOUNTS[0]?.id ?? MOCK_ACCOUNTS[0].id);
@@ -51,6 +54,13 @@ export default function ZelleModal({ visible, onClose }: Props) {
   function handleSubmit() {
     if (!amount || isNaN(Number(amount))) return;
     if (!recipient && !selectedContact) return;
+    const amt = Number(amount);
+    const account = accounts.find((a) => a.id === accountId)!;
+    if (amt > account.available) {
+      Alert.alert('Insufficient funds', `Available balance is $${account.available.toFixed(2)}.`);
+      return;
+    }
+    adjustBalance(accountId, -amt);
     setSuccess(true);
   }
 
