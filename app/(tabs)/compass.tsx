@@ -8,7 +8,6 @@ import SafeToSpendWidget from '../../components/SafeToSpendWidget';
 import ActionPlanCard from '../../components/ActionPlanCard';
 import ChallengesView from '../../components/ChallengesView';
 import GoalsView from '../../components/GoalsView';
-import AiChatbot from '../../components/AiChatbot';
 import { ForecastContent } from './future-forecast';
 import { colors } from '../../constants/theme';
 
@@ -89,7 +88,7 @@ export default function CompassScreen() {
 
       {section === 'goals' && <GoalsView />}
 
-      <AiChatbot />
+
     </SafeAreaView>
   );
 }

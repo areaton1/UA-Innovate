@@ -25,7 +25,7 @@ type Message = {
 
 const GREETING: Message = {
   role: 'assistant',
-  content: `Hey ${MOCK_USER.name.split(' ')[0]}! 👋 I'm your PNC AI Advisor. I can see your accounts and recent spending — ask me anything about your finances.`,
+  content: `Hey ${MOCK_USER.name.split(' ')[0]}! I'm your PNC AI Advisor. I can see your accounts and recent spending — ask me anything about your finances.`,
 };
 
 // ── Scripted fallback (no API key needed) ────────────────────────────────────
@@ -35,7 +35,7 @@ type ScriptedRule = { keywords: string[]; response: string };
 const SCRIPTED_RULES: ScriptedRule[] = [
   {
     keywords: ['hello', 'hi', 'hey', 'sup', 'what can you do', 'help'],
-    response: "Hey Everett! 👋 I can see your full account picture. Ask me about your credit card, rent, subscriptions, spending habits, savings — anything on your mind.",
+    response: "Hey Everett! I can see your full account picture. Ask me about your credit card, rent, subscriptions, spending habits, savings — anything on your mind.",
   },
   {
     keywords: ['credit', 'utilization', 'visa', '7712', 'credit score', 'fico'],
@@ -87,7 +87,7 @@ const SCRIPTED_RULES: ScriptedRule[] = [
   },
   {
     keywords: ['thank', 'thanks', 'appreciate', 'helpful', 'awesome', 'great'],
-    response: "Happy to help! Small wins add up fast — you've got this. Let me know if anything else comes up. 💪",
+    response: "Happy to help! Small wins add up fast — you've got this. Let me know if anything else comes up. ",
   },
 ];
 
@@ -310,9 +310,15 @@ export default function AiChatbot() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+  position: 'absolute',
+  bottom: 100,
+  right: 20,
+  zIndex: 999,
+},
   fab: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 80,
     right: 20,
     width: 56,
     height: 56,
