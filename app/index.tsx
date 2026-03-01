@@ -28,7 +28,7 @@ export default function HomeScreen() {
             </Text>
             <Button
               title="Get Started"
-              onPress={() => {}}
+              onPress={() => router.push('/(auth)/login')}
               style={styles.heroCta}
             />
           </View>

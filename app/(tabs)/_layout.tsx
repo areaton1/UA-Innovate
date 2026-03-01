@@ -2,7 +2,16 @@ import { Tabs } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '@/constants/theme';
 
-function TabIcon({ label, active }: { label: string; active: boolean }) {
+const ForecastArrowIcon = require('@/assets/icon-forecast-arrow.svg').default;
+
+function TabIcon({ label, active, color }: { label: string; active: boolean; color?: string }) {
+  if (label === 'Spending Forecast') {
+    return (
+      <View style={tabStyles.container}>
+        <ForecastArrowIcon width={22} height={22} color={color ?? (active ? colors.primary : '#888')} />
+      </View>
+    );
+  }
   const icons: Record<string, string> = {
     Home: '⌂',
     Transactions: '≡',
@@ -59,6 +68,11 @@ export default function TabsLayout() {
         options={{
           title: 'Challenges',
           tabBarIcon: ({ focused }) => <TabIcon label="Challenges" active={focused} />,
+        name="future-forecast"
+        options={{
+          title: 'Spending Forecast',
+          tabBarIcon: ({ focused, color }) => <TabIcon label="Spending Forecast" active={focused} color={color} />,
+          tabBarLabelStyle: { fontSize: 10, fontWeight: '600' },
         }}
       />
     </Tabs>
