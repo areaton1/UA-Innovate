@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,6 +8,8 @@ import ActionPlanCard from '@/components/ActionPlanCard';
 import ChallengesView from '@/components/ChallengesView';
 import { ForecastContent } from './future-forecast';
 import { colors } from '@/constants/theme';
+import { generateAIInsight } from '@/app/data/aiService';
+import { GEMINI_API_KEY } from '@/constants/aiConfig';
 
 type Section = 'insights' | 'challenges' | 'forecast';
 
@@ -19,6 +21,16 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
 
 export default function CompassScreen() {
   const [section, setSection] = useState<Section>('insights');
+  const [aiInsight, setAiInsight] = useState<string | undefined>();
+  const [aiLoading, setAiLoading] = useState(GEMINI_API_KEY !== 'YOUR_GEMINI_KEY_HERE');
+
+  useEffect(() => {
+    if (GEMINI_API_KEY === 'YOUR_GEMINI_KEY_HERE') return;
+    generateAIInsight()
+      .then(setAiInsight)
+      .catch(() => setAiInsight(undefined))
+      .finally(() => setAiLoading(false));
+  }, []);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -61,7 +73,7 @@ export default function CompassScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.insightsScroll}
         >
-          <ConfidenceScoreCard />
+          <ConfidenceScoreCard aiInsight={aiInsight} aiLoading={aiLoading} />
           <SafeToSpendWidget />
           <ActionPlanCard />
           <View style={{ height: 24 }} />

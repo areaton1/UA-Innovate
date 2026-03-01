@@ -1,7 +1,12 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { calculateConfidenceScore, type ScoreBreakdown } from '@/app/data/financialEngine';
+
+type Props = {
+  aiInsight?: string;
+  aiLoading?: boolean;
+};
 
 function FactorBar({ item }: { item: ScoreBreakdown }) {
   const barColor =
@@ -21,7 +26,7 @@ function FactorBar({ item }: { item: ScoreBreakdown }) {
   );
 }
 
-export default function ConfidenceScoreCard() {
+export default function ConfidenceScoreCard({ aiInsight, aiLoading }: Props = {}) {
   const [expanded, setExpanded] = useState(false);
   const result = calculateConfidenceScore();
 
@@ -49,6 +54,25 @@ export default function ConfidenceScoreCard() {
 
         <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color="#CCC" />
       </TouchableOpacity>
+
+      {(aiLoading || aiInsight) && (
+        <View style={styles.aiInsightBox}>
+          {aiLoading ? (
+            <View style={styles.aiInsightLoading}>
+              <ActivityIndicator size="small" color="#414e58" style={{ marginRight: 8 }} />
+              <Text style={styles.aiInsightLoadingText}>Getting AI insight…</Text>
+            </View>
+          ) : (
+            <>
+              <View style={styles.aiInsightHeader}>
+                <Ionicons name="sparkles" size={12} color="#414e58" style={{ marginRight: 4 }} />
+                <Text style={styles.aiInsightLabel}>AI Summary</Text>
+              </View>
+              <Text style={styles.aiInsightText}>{aiInsight}</Text>
+            </>
+          )}
+        </View>
+      )}
 
       {expanded && (
         <View style={styles.breakdown}>
@@ -121,6 +145,40 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   chevron: {},
+  aiInsightBox: {
+    marginHorizontal: 18,
+    marginBottom: 14,
+    backgroundColor: '#EEF2F7',
+    borderRadius: 10,
+    padding: 12,
+    borderLeftWidth: 3,
+    borderLeftColor: '#414e58',
+  },
+  aiInsightHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  aiInsightLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#414e58',
+    letterSpacing: 0.5,
+  },
+  aiInsightText: {
+    fontSize: 13,
+    color: '#333',
+    lineHeight: 19,
+  },
+  aiInsightLoading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  aiInsightLoadingText: {
+    fontSize: 12,
+    color: '#888',
+    fontStyle: 'italic',
+  },
   breakdown: {
     paddingHorizontal: 18,
     paddingBottom: 16,
