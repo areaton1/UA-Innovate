@@ -6,6 +6,7 @@ function TabIcon({ label, active }: { label: string; active: boolean }) {
   const icons: Record<string, string> = {
     Home: '⌂',
     Transactions: '≡',
+    Challenges: '🏆',
   };
   return (
     <View style={tabStyles.container}>
@@ -51,6 +52,13 @@ export default function TabsLayout() {
         options={{
           title: 'Transactions',
           tabBarIcon: ({ focused }) => <TabIcon label="Transactions" active={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="challenges"
+        options={{
+          title: 'Challenges',
+          tabBarIcon: ({ focused }) => <TabIcon label="Challenges" active={focused} />,
         }}
       />
     </Tabs>
