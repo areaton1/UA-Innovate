@@ -395,8 +395,8 @@ export function ForecastContent() {
 
   const stabilityColor =
     result.probStaysPositive >= 0.8 ? '#2e7d32' : result.probStaysPositive >= 0.5 ? '#f9a825' : '#c62828';
+  // Use actual max so the largest category gets 100% bar width; others scale relative to it
   const maxCategorySpend = Math.max(
-    400,
     ...result.spendingByCategory.map((x) => x.expectedMonthly),
     1
   );
@@ -414,6 +414,9 @@ export function ForecastContent() {
         <View style={styles.card}>
           <Text style={styles.sectionBadge}>Financial weather forecast</Text>
           <Text style={styles.cardTitle}>Balance projection</Text>
+          <Text style={styles.startingBalance}>
+            Starting balance (from your accounts): {formatCurrency(result.startingBalance)}
+          </Text>
           <View style={styles.metricRow}>
             <View style={styles.metric}>
               <Text style={[styles.metricValue, { color: stabilityColor }]}>
@@ -451,7 +454,7 @@ export function ForecastContent() {
                 <View
                   style={[
                     styles.barFill,
-                    { width: `${Math.min(100, (c.expectedMonthly / maxCategorySpend) * 100)}%` },
+                    { width: `${(c.expectedMonthly / maxCategorySpend) * 100}%` },
                   ]}
                 />
               </View>
@@ -664,7 +667,7 @@ export function ForecastContent() {
                     styles.riskBarFill,
                     r.severity === 'high' && styles.riskBarHigh,
                     r.severity === 'medium' && styles.riskBarMedium,
-                    { width: `${Math.min(100, r.impactPercent)}%` },
+                    { width: r.severity === 'high' ? '100%' : r.severity === 'medium' ? '66%' : '33%' },
                   ]}
                 />
               </View>
@@ -733,6 +736,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   cardTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 12 },
+  startingBalance: { fontSize: 13, color: colors.textMuted, marginBottom: 12 },
   metricRow: { flexDirection: 'row', alignItems: 'center' },
   metric: { flex: 1, alignItems: 'center' },
   metricValue: { fontSize: 22, fontWeight: '800', color: colors.text },

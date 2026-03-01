@@ -7,9 +7,13 @@ const HIGH_PERCENTILE = 90;
 const STABILITY_BUFFER = 500;
 const TIGHT_MONTH_THRESHOLD = 500;
 const CREDIT_UTIL_WARN = 0.8;
-const RISK_DISPLAY_FLOOR = 0.02;
-const RISK_DISPLAY_CEIL = 0.92;
 const OVERDRAFT_BLEND_END = 0.45;
+/** Avoid 0% and 100% in display so probabilities reflect cash volatility and uncertainty */
+const DISPLAY_PROB_MIN = 0.03;
+const DISPLAY_PROB_MAX = 0.97;
+function clampDisplayProb(p: number): number {
+  return Math.max(DISPLAY_PROB_MIN, Math.min(DISPLAY_PROB_MAX, p));
+}
 
 const RECURRING_CATEGORIES = new Set(['Subscriptions', 'Utilities', 'Interest']);
 const DISCRETIONARY_CATEGORIES = new Set(['Food & Dining', 'Shopping', 'Groceries', 'Gas', 'Transfer']);
@@ -51,15 +55,16 @@ function monthlyStatsFromTransactions(transactions: Transaction[]) {
   const categoryParams: Record<string, { mean: number; std: number }> = {};
   for (const [cat, amounts] of Object.entries(byCategory)) {
     const total = amounts.reduce((a, b) => a + b, 0);
-    const mean = (total * scaleToMonth) / Math.max(1, amounts.length);
-    const variance =
+    // Monthly total for this category = period total scaled to 30 days (matches actual spending)
+    const mean = total * scaleToMonth;
+    const avgPerTx = total / Math.max(1, amounts.length);
+    const sampleVariance =
       amounts.length > 1
-        ? Math.max(
-            100,
-            (amounts.reduce((s, x) => s + (x - total / amounts.length) ** 2, 0) / amounts.length) * scaleToMonth ** 2
-          )
-        : mean * mean * 0.15;
-    const std = Math.min(Math.sqrt(variance), mean * EXPENSE_CV_MAX);
+        ? amounts.reduce((s, x) => s + (x - avgPerTx) ** 2, 0) / amounts.length
+        : avgPerTx * avgPerTx * 0.15;
+    const sampleStd = Math.sqrt(sampleVariance);
+    const cv = avgPerTx > 0 ? sampleStd / avgPerTx : 0.3;
+    const std = Math.min(mean * Math.min(cv, EXPENSE_CV_MAX), mean * EXPENSE_CV_MAX);
     categoryParams[cat] = { mean, std };
   }
 
@@ -112,21 +117,6 @@ function spendingVolatilityIndex(categoryParams: Record<string, { mean: number; 
   const weightedCv =
     entries.reduce((s, [, p]) => s + (p.mean / totalMean) * (p.std / p.mean), 0) * 100;
   return Math.min(1.5, Math.max(0.2, weightedCv / 40));
-}
-
-function realisticRiskDisplay(
-  rawP: number,
-  volatilityIndex: number
-): number {
-  const volatilityFactor = 0.88 + 0.14 * Math.min(volatilityIndex, 1.2);
-  const p = Math.max(RISK_DISPLAY_FLOOR, Math.min(RISK_DISPLAY_CEIL, rawP * volatilityFactor));
-  return p;
-}
-
-function realisticGoodProbDisplay(rawP: number, volatilityIndex: number): number {
-  const vol = Math.min(volatilityIndex, 1.2);
-  const conservativeFactor = 1 - 0.12 * vol;
-  return Math.max(0.05, Math.min(0.98, rawP * conservativeFactor));
 }
 
 export type ForecastPoint = {
@@ -553,10 +543,13 @@ export function runFullMonteCarlo(
   const finalBalances = paths.map((p) => p[MONTHS_AHEAD]).sort((a, b) => a - b);
   const medianBalanceAt12Months = forecastByMonth[MONTHS_AHEAD]?.p50 ?? percentile(finalBalances, 50);
 
-  const rawProbStaysPositive = paths.filter((p) => p[MONTHS_AHEAD] > 0).length / NUM_SIMS;
-  const rawProbAboveStabilityBuffer = paths.filter((p) => p[MONTHS_AHEAD] > STABILITY_BUFFER).length / NUM_SIMS;
-  const probStaysPositive = realisticGoodProbDisplay(rawProbStaysPositive, volatilityIndex);
-  const probAboveStabilityBuffer = realisticGoodProbDisplay(rawProbAboveStabilityBuffer, volatilityIndex);
+  // Raw simulation proportions, clamped so we never show 0% or 100% (reflects cash volatility)
+  const probStaysPositive = clampDisplayProb(
+    paths.filter((p) => p[MONTHS_AHEAD] > 0).length / NUM_SIMS
+  );
+  const probAboveStabilityBuffer = clampDisplayProb(
+    paths.filter((p) => p[MONTHS_AHEAD] > STABILITY_BUFFER).length / NUM_SIMS
+  );
   const probAbove1000 = paths.filter((p) => p[MONTHS_AHEAD] > 1000).length / NUM_SIMS;
   const probAbove5000 = paths.filter((p) => p[MONTHS_AHEAD] > 5000).length / NUM_SIMS;
 
@@ -585,32 +578,29 @@ export function runFullMonteCarlo(
   const billMissThreshold = Math.max(300, Math.min(600, monthlyIncome.mean * 0.08));
   const probEverOverdraft = paths.filter((p) => p.some((b) => b < 0)).length / NUM_SIMS;
   const probEndOverdraft = paths.filter((p) => p[MONTHS_AHEAD] < 0).length / NUM_SIMS;
-  const riskOverdraft = realisticRiskDisplay(
-    (1 - OVERDRAFT_BLEND_END) * probEverOverdraft + OVERDRAFT_BLEND_END * probEndOverdraft,
-    volatilityIndex
+  // Each risk is its own share of paths; clamped so we never show 0% or 100% (reflects volatility)
+  const riskOverdraft = clampDisplayProb(
+    (1 - OVERDRAFT_BLEND_END) * probEverOverdraft + OVERDRAFT_BLEND_END * probEndOverdraft
   );
-  const riskMissBill = realisticRiskDisplay(
-    paths.filter((p) => p.some((b) => b < billMissThreshold)).length / NUM_SIMS,
-    volatilityIndex
+  const riskMissBill = clampDisplayProb(
+    paths.filter((p) => p.some((b) => b < billMissThreshold)).length / NUM_SIMS
   );
-  const riskTightMonth = realisticRiskDisplay(
-    paths.filter((p) => p.some((b) => b < TIGHT_MONTH_THRESHOLD)).length / NUM_SIMS,
-    volatilityIndex
+  const riskTightMonth = clampDisplayProb(
+    paths.filter((p) => p.some((b) => b < TIGHT_MONTH_THRESHOLD)).length / NUM_SIMS
   );
   const savingsBalance = options?.savingsBalance ?? 0;
   const dipIntoSavingsThreshold = totalBalance - savingsBalance * 0.4;
-  const riskDipIntoSavings = realisticRiskDisplay(
-    paths.filter((p) => p.some((b) => b < dipIntoSavingsThreshold)).length / NUM_SIMS,
-    volatilityIndex
+  const riskDipIntoSavings = clampDisplayProb(
+    paths.filter((p) => p.some((b) => b < dipIntoSavingsThreshold)).length / NUM_SIMS
   );
   const creditLimit = options?.creditLimit ?? 10000;
-  const rawHighCreditUtil =
+  const riskHighCreditUtil = clampDisplayProb(
     paths.filter((p) => {
       const minBal = Math.min(...p);
       const impliedCreditUse = minBal < 0 ? Math.abs(minBal) : 0;
       return creditLimit > 0 && impliedCreditUse / creditLimit >= CREDIT_UTIL_WARN;
-    }).length / NUM_SIMS;
-  const riskHighCreditUtil = realisticRiskDisplay(rawHighCreditUtil, volatilityIndex);
+    }).length / NUM_SIMS
+  );
 
   const riskFactors = buildRiskFactors(categoryParams, monthlyIncome);
   const meanSpend = monthlySpend.flat().reduce((a, b) => a + b, 0) / (NUM_SIMS * MONTHS_AHEAD);
@@ -680,7 +670,7 @@ export function runFullMonteCarlo(
       description: mod.description,
       deltaOverdraftPct: (scenarioOverdraft - baseOverdraft) * 100,
       deltaMedianBalance: percentile(scenarioFinal, 50) - medianBalanceAt12Months,
-      deltaStabilityPct: (scenarioStability - rawProbAboveStabilityBuffer) * 100,
+      deltaStabilityPct: (scenarioStability - probAboveStabilityBuffer) * 100,
     });
   }
 
