@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import type { Subscription } from '../data/mockData';
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Streaming: '#f58025',
+  Streaming: '#0069aa',
   Music:     '#f58025',
   Software:  '#414e58',
   Gaming:    '#2e7d32',

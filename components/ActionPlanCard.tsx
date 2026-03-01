@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { generateActionPlan, type Action, type ActionPriority } from '@/app/data/financialEngine';
-import { getAIActionAdvice } from '@/app/data/aiService';
-import { GEMINI_API_KEY } from '@/constants/aiConfig';
+import { generateActionPlan, type Action, type ActionPriority } from '../data/financialEngine';
 
-const PNC_ORANGE = '#EF7622';
+const PNC_NAVY = '#003087';
 
 const PRIORITY_CONFIG: Record<ActionPriority, { color: string; label: string }> = {
   high:   { color: '#C62828', label: 'Do this now' },
@@ -16,25 +14,11 @@ const PRIORITY_CONFIG: Record<ActionPriority, { color: string; label: string }> 
 
 function ActionItem({ action, isLast }: { action: Action; isLast: boolean }) {
   const [expanded, setExpanded] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
   const cfg = PRIORITY_CONFIG[action.priority];
   const router = useRouter();
-  const hasAI = GEMINI_API_KEY !== 'YOUR_GEMINI_KEY_HERE';
 
-  async function handleTakeAction() {
-    if (!hasAI) {
-      router.push(`/action/${action.id}`);
-      return;
-    }
-    setAiLoading(true);
-    try {
-      const advice = await getAIActionAdvice(action.title, action.description);
-      Alert.alert(`AI Advice: ${action.title}`, advice, [{ text: 'Got it' }]);
-    } catch {
-      router.push(`/action/${action.id}`);
-    } finally {
-      setAiLoading(false);
-    }
+  function handleTakeAction() {
+    router.push(`/action/${action.id}`);
   }
 
   return (
@@ -58,18 +42,8 @@ function ActionItem({ action, isLast }: { action: Action; isLast: boolean }) {
           {expanded && (
             <View style={styles.expandedContent}>
               <Text style={styles.actionDescription}>{action.description}</Text>
-              <TouchableOpacity
-                style={[styles.ctaBtn, aiLoading && { opacity: 0.7 }]}
-                onPress={handleTakeAction}
-                disabled={aiLoading}
-              >
-                {aiLoading ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Text style={styles.ctaBtnText}>
-                    {hasAI ? '✦ Ask AI' : 'Take Action →'}
-                  </Text>
-                )}
+              <TouchableOpacity style={styles.ctaBtn} onPress={handleTakeAction}>
+                <Text style={styles.ctaBtnText}>Take Action →</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -145,7 +119,7 @@ const styles = StyleSheet.create({
   cardLabel: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#222',
+    color: PNC_NAVY,
   },
   cardSubtitle: {
     fontSize: 12,
@@ -156,7 +130,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: PNC_ORANGE,
+    backgroundColor: PNC_NAVY,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -167,7 +141,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   countBadgeLabel: {
-    color: 'rgba(255,255,255,0.7)',
+    color: '#A8C8E8',
     fontSize: 9,
     fontWeight: '600',
   },
@@ -239,7 +213,7 @@ const styles = StyleSheet.create({
   },
   ctaBtn: {
     alignSelf: 'flex-start',
-    backgroundColor: PNC_ORANGE,
+    backgroundColor: PNC_NAVY,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 8,

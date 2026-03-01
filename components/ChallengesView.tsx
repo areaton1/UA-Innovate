@@ -16,6 +16,7 @@ import {
   type ChallengeStatus,
 } from '../data/challengesData';
 
+const PNC_NAVY = '#003087';
 const PNC_ORANGE = '#EF7622';
 
 const STATUS_CONFIG: Record<ChallengeStatus, { label: string; color: string; bg: string }> = {
@@ -28,7 +29,7 @@ const TIER_COLORS: Record<string, string> = {
   Bronze:   '#CD7F32',
   Silver:   '#9E9E9E',
   Gold:     '#FFB300',
-  Platinum: '#78909C',
+  Platinum: '#0069aa',
   Diamond:  '#7C4DFF',
 };
 
@@ -128,7 +129,7 @@ function ChallengeCard({
               <View
                 style={[
                   styles.progressFill,
-                  { width: `${challenge.progress}%`, backgroundColor: PNC_ORANGE },
+                  { width: `${challenge.progress}%`, backgroundColor: PNC_NAVY },
                 ]}
               />
             </View>
@@ -313,13 +314,13 @@ const styles = StyleSheet.create({
   rankTierName: { fontSize: 22, fontWeight: '900' },
   rankXPBox: {
     alignItems: 'center',
-    backgroundColor: PNC_ORANGE,
+    backgroundColor: PNC_NAVY,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   rankXPNum: { color: '#fff', fontSize: 22, fontWeight: '900', lineHeight: 24 },
-  rankXPLabel: { color: 'rgba(255,255,255,0.75)', fontSize: 11, fontWeight: '600' },
+  rankXPLabel: { color: '#A8C8E8', fontSize: 11, fontWeight: '600' },
   rankProgressRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -404,7 +405,7 @@ const styles = StyleSheet.create({
 
   startBtn: {
     marginTop: 12,
-    backgroundColor: PNC_ORANGE,
+    backgroundColor: PNC_NAVY,
     borderRadius: 8,
     paddingVertical: 10,
     alignItems: 'center',
@@ -431,7 +432,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F0F0F0',
     gap: 10,
   },
-  lbRowHighlight: { backgroundColor: '#FFF4EC' },
+  lbRowHighlight: { backgroundColor: '#EEF4FB' },
   lbRankTrophy: { width: 32, textAlign: 'center' },
   lbRankNum: { fontSize: 16, width: 32, textAlign: 'center', color: '#888' },
   lbAvatar: {
@@ -444,8 +445,8 @@ const styles = StyleSheet.create({
   lbAvatarText: { color: '#fff', fontSize: 15, fontWeight: '800' },
   lbInfo: { flex: 1 },
   lbName: { fontSize: 14, fontWeight: '600', color: '#222' },
-  lbNameHighlight: { fontWeight: '800', color: PNC_ORANGE },
+  lbNameHighlight: { fontWeight: '800', color: PNC_NAVY },
   lbTier: { fontSize: 11, fontWeight: '600', marginTop: 1 },
   lbXP: { fontSize: 14, fontWeight: '700', color: '#444' },
-  lbXPHighlight: { color: PNC_ORANGE, fontWeight: '900' },
+  lbXPHighlight: { color: PNC_NAVY, fontWeight: '900' },
 });

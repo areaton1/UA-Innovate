@@ -4,8 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { generateActionPlan, type ActionPriority } from '../../data/financialEngine';
 
-const PNC_ORANGE = '#EF7622';
-const PNC_NAV_BG = '#414e58';
+const PNC_NAVY = '#003087';
 
 const PRIORITY_CONFIG: Record<ActionPriority, { color: string; label: string }> = {
   high:   { color: '#C62828', label: 'Do this now' },
@@ -70,7 +69,7 @@ export default function ActionDetailScreen() {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={22} color="rgba(255,255,255,0.8)" />
+          <Ionicons name="arrow-back" size={22} color="#A8C8E8" />
         </TouchableOpacity>
         <Text style={{ padding: 20 }}>Action not found.</Text>
       </SafeAreaView>
@@ -84,7 +83,7 @@ export default function ActionDetailScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Ionicons name="arrow-back" size={22} color="rgba(255,255,255,0.8)" />
+          <Ionicons name="arrow-back" size={22} color="#A8C8E8" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Action Plan</Text>
         <View style={{ width: 60 }} />
@@ -94,7 +93,7 @@ export default function ActionDetailScreen() {
         {/* Action Hero */}
         <View style={styles.heroCard}>
           <View style={styles.heroTop}>
-            <Ionicons name={action.icon as any} size={32} color={PNC_ORANGE} />
+            <Ionicons name={action.icon as any} size={32} color={PNC_NAVY} />
             <View style={[styles.priorityBadge, { backgroundColor: cfg.color + '20' }]}>
               <View style={[styles.priorityDot, { backgroundColor: cfg.color }]} />
               <Text style={[styles.priorityLabel, { color: cfg.color }]}>{cfg.label}</Text>
@@ -112,7 +111,7 @@ export default function ActionDetailScreen() {
         <Text style={styles.stepsHeading}>How to do it</Text>
         {steps.map((step, i) => (
           <View key={i} style={styles.stepCard}>
-            <View style={[styles.stepNumber, { backgroundColor: PNC_ORANGE }]}>
+            <View style={[styles.stepNumber, { backgroundColor: PNC_NAVY }]}>
               <Text style={styles.stepNumberText}>{i + 1}</Text>
             </View>
             <Text style={styles.stepText}>{step}</Text>
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F6F9',
   },
   header: {
-    backgroundColor: PNC_NAV_BG,
+    backgroundColor: PNC_NAVY,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -267,7 +266,7 @@ const styles = StyleSheet.create({
     paddingTop: 4,
   },
   ctaButton: {
-    backgroundColor: PNC_ORANGE,
+    backgroundColor: PNC_NAVY,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
@@ -280,12 +279,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   motivationCard: {
-    backgroundColor: '#FFF4EC',
+    backgroundColor: '#EEF4FB',
     borderRadius: 12,
     padding: 16,
     marginTop: 10,
     borderLeftWidth: 3,
-    borderLeftColor: PNC_ORANGE,
+    borderLeftColor: PNC_NAVY,
   },
   motivationText: {
     fontSize: 13,
