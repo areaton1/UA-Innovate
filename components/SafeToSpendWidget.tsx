@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { calculateSafeToSpend } from '../data/financialEngine';
 
 const PNC_ORANGE = '#EF7622';
-const PNC_NAVY = '#003087';
 
 export default function SafeToSpendWidget() {
   const [view, setView] = useState<'daily' | 'weekly'>('daily');
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   toggleBtnActive: {
-    backgroundColor: PNC_NAVY,
+    backgroundColor: PNC_ORANGE,
   },
   toggleText: {
     fontSize: 12,

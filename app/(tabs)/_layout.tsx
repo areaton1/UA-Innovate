@@ -1,7 +1,8 @@
 import { Tabs } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../constants/theme';
+import { colors } from '@/constants/theme';
+import AIFloatingButton from '@/components/AIFloatingButton';
 
 const TAB_ICONS: Record<string, { outline: string; filled: string }> = {
   Home:         { outline: 'home-outline',    filled: 'home' },
@@ -27,6 +28,7 @@ const tabStyles = StyleSheet.create({
 
 export default function TabsLayout() {
   return (
+    <View style={{ flex: 1 }}>
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -73,5 +75,7 @@ export default function TabsLayout() {
         options={{ href: null }}
       />
     </Tabs>
+    <AIFloatingButton />
+    </View>
   );
 }
