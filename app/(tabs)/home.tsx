@@ -9,9 +9,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS } from '../data/mockData';
+import { MOCK_USER, MOCK_ACCOUNTS, MOCK_TRANSACTIONS, MOCK_SUBSCRIPTIONS } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
 import { colors, spacing, typography } from '@/constants/theme';
+import TransferModal from '@/components/TransferModal';
+import PayBillsModal from '@/components/PayBillsModal';
+import DepositModal from '@/components/DepositModal';
+import ZelleModal from '@/components/ZelleModal';
 
 const PncLogo = require('@/assets/pnc-logo-rev.svg').default;
 
@@ -19,6 +23,11 @@ function formatCurrency(amount: number) {
   const abs = Math.abs(amount);
   const formatted = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return amount < 0 ? `-$${formatted}` : `$${formatted}`;
+}
+
+function formatCurrencyAbs(amount: number) {
+  const abs = Math.abs(amount);
+  return '$' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function formatDate(dateStr: string) {
@@ -30,8 +39,15 @@ export default function HomeScreen() {
   const router = useRouter();
   const { logout } = useAuth();
   const [balancesHidden, setBalancesHidden] = useState(false);
+  const [showTransfer, setShowTransfer] = useState(false);
+  const [showPayBills, setShowPayBills] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(false);
+  const [showZelle, setShowZelle] = useState(false);
 
   const recentTransactions = MOCK_TRANSACTIONS.filter((t) => t.accountId === '1').slice(0, 4);
+
+  const monthlySubTotal = MOCK_SUBSCRIPTIONS.reduce((sum, s) => sum + s.amount, 0);
+  const topSubs = [...MOCK_SUBSCRIPTIONS].sort((a, b) => b.amount - a.amount).slice(0, 3);
 
   function handleLogout() {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -58,11 +74,16 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-        <View style={styles.alertBanner}>
+        <TouchableOpacity
+          style={styles.alertBanner}
+          activeOpacity={0.8}
+          onPress={() => router.push('/(tabs)/transactions')}
+        >
           <Text style={styles.alertText}>
-            Spend Tracker: You've used 68% of your monthly budget
+            ◉  Subscription Radar: {MOCK_SUBSCRIPTIONS.length} active subscriptions — ${monthlySubTotal.toFixed(2)}/mo
           </Text>
-        </View>
+          <Text style={styles.alertLink}>View →</Text>
+        </TouchableOpacity>
 
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>My Accounts</Text>
@@ -72,7 +93,12 @@ export default function HomeScreen() {
         </View>
 
         {MOCK_ACCOUNTS.map((account) => (
-          <TouchableOpacity key={account.id} style={styles.accountCard} activeOpacity={0.8}>
+          <TouchableOpacity
+            key={account.id}
+            style={styles.accountCard}
+            activeOpacity={0.8}
+            onPress={() => router.push(`/account/${account.id}` as never)}
+          >
             <View style={styles.accountCardLeft}>
               <View style={[styles.accountTypeBadge, account.type === 'Credit' && styles.creditBadge]}>
                 <Text style={styles.accountTypeBadgeText}>{account.type.charAt(0)}</Text>
@@ -86,15 +112,12 @@ export default function HomeScreen() {
               <Text style={styles.balanceLabel}>
                 {account.type === 'Credit' ? 'Balance Due' : 'Available'}
               </Text>
-              <Text
-                style={[
-                  styles.balanceAmount,
-                  account.balance < 0 && styles.negativeBalance,
-                ]}
-              >
+              <Text style={styles.balanceAmount}>
                 {balancesHidden
                   ? '••••••'
-                  : formatCurrency(account.type === 'Credit' ? account.balance : account.available)}
+                  : account.type === 'Credit'
+                  ? formatCurrencyAbs(account.balance)
+                  : formatCurrency(account.available)}
               </Text>
             </View>
           </TouchableOpacity>
@@ -104,21 +127,22 @@ export default function HomeScreen() {
           Quick Actions
         </Text>
         <View style={styles.quickActions}>
-          {[
-            { label: 'Transfer', icon: '↔' },
-            { label: 'Pay Bills', icon: '📄' },
-            { label: 'Deposit', icon: '📱' },
-            { label: 'Zelle®', icon: '⚡' },
-          ].map((action) => (
-            <TouchableOpacity
-              key={action.label}
-              style={styles.actionBtn}
-              onPress={() => Alert.alert(action.label, 'This feature is coming soon!')}
-            >
-              <Text style={styles.actionIcon}>{action.icon}</Text>
-              <Text style={styles.actionLabel}>{action.label}</Text>
-            </TouchableOpacity>
-          ))}
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setShowTransfer(true)}>
+            <Text style={styles.actionIcon}>↔</Text>
+            <Text style={styles.actionLabel}>Transfer</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setShowPayBills(true)}>
+            <Text style={styles.actionIcon}>📄</Text>
+            <Text style={styles.actionLabel}>Pay Bills</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setShowDeposit(true)}>
+            <Text style={styles.actionIcon}>📱</Text>
+            <Text style={styles.actionLabel}>Deposit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setShowZelle(true)}>
+            <Text style={styles.actionIcon}>⚡</Text>
+            <Text style={styles.actionLabel}>Zelle®</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.sectionHeader}>
@@ -145,8 +169,45 @@ export default function HomeScreen() {
           </View>
         ))}
 
+        {/* Subscription Radar mini-widget */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Subscription Radar</Text>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/transactions')}>
+            <Text style={styles.actionLink}>View All</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.radarCard}>
+          <View style={styles.radarCardTop}>
+            <View>
+              <Text style={styles.radarTotal}>${monthlySubTotal.toFixed(2)}</Text>
+              <Text style={styles.radarTotalLabel}>monthly subscriptions</Text>
+            </View>
+            <View style={styles.radarCountBadge}>
+              <Text style={styles.radarCountText}>{MOCK_SUBSCRIPTIONS.length} active</Text>
+            </View>
+          </View>
+          {topSubs.map((sub) => (
+            <View key={sub.id} style={styles.radarSubRow}>
+              <Text style={styles.radarSubIcon}>{sub.icon}</Text>
+              <Text style={styles.radarSubName}>{sub.name}</Text>
+              <Text style={styles.radarSubAmt}>-${sub.amount.toFixed(2)}/mo</Text>
+            </View>
+          ))}
+          <TouchableOpacity
+            style={styles.radarViewAllBtn}
+            onPress={() => router.push('/(tabs)/transactions')}
+          >
+            <Text style={styles.radarViewAllText}>See all subscriptions & insights →</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={{ height: spacing.lg }} />
       </ScrollView>
+
+      <TransferModal visible={showTransfer} onClose={() => setShowTransfer(false)} />
+      <PayBillsModal visible={showPayBills} onClose={() => setShowPayBills(false)} />
+      <DepositModal visible={showDeposit} onClose={() => setShowDeposit(false)} />
+      <ZelleModal visible={showZelle} onClose={() => setShowZelle(false)} />
     </SafeAreaView>
   );
 }
@@ -171,8 +232,12 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginBottom: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  alertText: { color: colors.navBg, fontSize: 13, fontWeight: '500' },
+  alertText: { color: colors.navBg, fontSize: 13, fontWeight: '500', flex: 1 },
+  alertLink: { color: colors.link, fontSize: 13, fontWeight: '700', marginLeft: 8 },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -261,4 +326,47 @@ const styles = StyleSheet.create({
   txDate: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
   txAmount: { fontSize: 15, fontWeight: '700', color: '#c62828' },
   positiveAmount: { color: '#2e7d32' },
+
+  radarCard: {
+    backgroundColor: colors.white,
+    borderRadius: 14,
+    padding: spacing.md,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  radarCardTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  radarTotal: { fontSize: 22, fontWeight: '800', color: colors.text },
+  radarTotalLabel: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
+  radarCountBadge: {
+    backgroundColor: colors.navBg + '18',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+  },
+  radarCountText: { color: colors.navBg, fontWeight: '700', fontSize: 12 },
+  radarSubRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    gap: 10,
+  },
+  radarSubIcon: { fontSize: 16 },
+  radarSubName: { flex: 1, fontWeight: '500', color: colors.text, fontSize: 13 },
+  radarSubAmt: { fontWeight: '700', color: '#c62828', fontSize: 13 },
+  radarViewAllBtn: {
+    marginTop: 10,
+    alignSelf: 'center',
+  },
+  radarViewAllText: { color: colors.link, fontSize: 13, fontWeight: '600' },
 });
