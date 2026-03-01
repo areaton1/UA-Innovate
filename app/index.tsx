@@ -37,14 +37,14 @@ export default function HomeScreen() {
         {/* Products & Services - from "Explore and apply online" */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Products & Services</Text>
-          <Text style={styles.sectionSubtitle}>Explore and apply online.</Text>
+          <Text style={styles.sectionSubtitle}>Explore online.</Text>
           <View style={styles.productGrid}>
             {products.map((p) => (
               <Card
                 key={p.id}
                 title={p.label}
                 Icon={p.icon}
-                onPress={() => router.push("/products")}
+                onPress={() => router.push("/(auth)/login")}
                 style={styles.productCard}
               />
             ))}
@@ -53,15 +53,17 @@ export default function HomeScreen() {
 
         {/* Contact strip - from Contact Us */}
         <View style={styles.contactStrip}>
-          <Text style={styles.contactTitle}>Contact Us</Text>
+          <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+            <Text style={styles.contactTitle}>Contact Us</Text>
+          </TouchableOpacity>
           <View style={styles.contactRow}>
-            <TouchableOpacity style={styles.contactItem}>
+            <TouchableOpacity style={styles.contactItem} onPress={() => router.push("/(auth)/login")}>
               <Text style={styles.contactLabel}>Schedule an Appointment</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.contactItem}>
+            <TouchableOpacity style={styles.contactItem} onPress={() => router.push("/(auth)/login")}>
               <Text style={styles.contactLabel}>Find a Branch</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.contactItem}>
+            <TouchableOpacity style={styles.contactItem} onPress={() => router.push("/(auth)/login")}>
               <Text style={styles.contactLabel}>Call 1-888-PNC-Bank</Text>
             </TouchableOpacity>
           </View>
