@@ -160,15 +160,20 @@ function ChallengeCard({
 function LeaderboardRow({ entry }: { entry: (typeof LEADERBOARD)[0] }) {
   const tierColor = TIER_COLORS[entry.tierName] ?? '#888';
   const isUser = entry.isCurrentUser;
+  const initial = entry.name.charAt(0).toUpperCase();
+  const displayName = isUser ? entry.name : entry.name.charAt(0) + '•••••';
 
   return (
     <View style={[styles.lbRow, isUser && styles.lbRowHighlight]}>
-      <Text style={[styles.lbRank, isUser && styles.lbRankHighlight]}>
+      <Text style={styles.lbRankNum}>
         {entry.rank <= 3 ? ['🥇', '🥈', '🥉'][entry.rank - 1] : `#${entry.rank}`}
       </Text>
+      <View style={[styles.lbAvatar, { backgroundColor: entry.avatarColor }]}>
+        <Text style={styles.lbAvatarText}>{initial}</Text>
+      </View>
       <View style={styles.lbInfo}>
         <Text style={[styles.lbName, isUser && styles.lbNameHighlight]}>
-          {entry.name}{isUser ? ' (You)' : ''}
+          {displayName}{isUser ? ' (You)' : ''}
         </Text>
         <Text style={[styles.lbTier, { color: tierColor }]}>{entry.tierName}</Text>
       </View>
@@ -440,11 +445,19 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#F0F0F0',
+    gap: 10,
   },
   lbRowHighlight: { backgroundColor: '#EEF4FB' },
-  lbRank: { fontSize: 18, width: 40, textAlign: 'center' },
-  lbRankHighlight: { fontWeight: '900' },
-  lbInfo: { flex: 1, marginLeft: 8 },
+  lbRankNum: { fontSize: 16, width: 32, textAlign: 'center', color: '#888' },
+  lbAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  lbAvatarText: { color: '#fff', fontSize: 15, fontWeight: '800' },
+  lbInfo: { flex: 1 },
   lbName: { fontSize: 14, fontWeight: '600', color: '#222' },
   lbNameHighlight: { fontWeight: '800', color: PNC_NAVY },
   lbTier: { fontSize: 11, fontWeight: '600', marginTop: 1 },

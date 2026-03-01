@@ -23,6 +23,7 @@ export type Tier = {
 export type LeaderboardEntry = {
   rank: number;
   name: string;
+  avatarColor: string;
   xp: number;
   tierName: string;
   isCurrentUser?: boolean;
@@ -144,12 +145,12 @@ export const INITIAL_CHALLENGES: Challenge[] = [
 ];
 
 export const LEADERBOARD: LeaderboardEntry[] = [
-  { rank: 1, name: 'Jordan M.',  xp: 2340, tierName: 'Platinum' },
-  { rank: 2, name: 'Taylor S.',  xp: 1890, tierName: 'Gold'     },
-  { rank: 3, name: 'Alex R.',    xp: 1450, tierName: 'Gold'     },
-  { rank: 4, name: 'Everett P.', xp: 150,  tierName: 'Bronze', isCurrentUser: true },
-  { rank: 5, name: 'Casey L.',   xp: 820,  tierName: 'Silver'   },
-  { rank: 6, name: 'Morgan K.',  xp: 640,  tierName: 'Silver'   },
-  { rank: 7, name: 'Riley B.',   xp: 390,  tierName: 'Bronze'   },
-  { rank: 8, name: 'Avery T.',   xp: 210,  tierName: 'Bronze'   },
+  { rank: 1, name: 'Jordan',   avatarColor: '#7C4DFF', xp: 2340, tierName: 'Platinum' },
+  { rank: 2, name: 'Taylor',   avatarColor: '#FFB300', xp: 1890, tierName: 'Gold'     },
+  { rank: 3, name: 'Alex',     avatarColor: '#FFB300', xp: 1450, tierName: 'Gold'     },
+  { rank: 4, name: 'Everett',  avatarColor: '#003087', xp: 150,  tierName: 'Bronze', isCurrentUser: true },
+  { rank: 5, name: 'Casey',    avatarColor: '#9E9E9E', xp: 820,  tierName: 'Silver'   },
+  { rank: 6, name: 'Morgan',   avatarColor: '#9E9E9E', xp: 640,  tierName: 'Silver'   },
+  { rank: 7, name: 'Riley',    avatarColor: '#CD7F32', xp: 390,  tierName: 'Bronze'   },
+  { rank: 8, name: 'Avery',    avatarColor: '#CD7F32', xp: 210,  tierName: 'Bronze'   },
 ];
